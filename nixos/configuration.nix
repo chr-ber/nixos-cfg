@@ -117,6 +117,9 @@
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
+  # Enable GVFS for virtual file system support (needed for file managers).
+  services.gvfs.enable = true;
+
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;

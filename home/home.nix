@@ -144,17 +144,37 @@
     };
   };
 
+# ==========================================
+  # CONFIG LINKS (The Complete ML4W Suite)
   # ==========================================
-  # CONFIG FILE MANAGEMENT (Symlinks)
-  # ==========================================
-  
-  # Link Hyprland Config
-  xdg.configFile."hypr/hyprland.conf".source = ../hypr/hyprland.conf;
-  xdg.configFile."hypr/hyprpaper.conf".source = ../hypr/hyprpaper.conf;
+  xdg.configFile = {
+    # -- DESKTOP CORE --
+    "hypr".source = ../templates/ml4w-config/hypr;
+    "waybar".source = ../templates/ml4w-config/waybar;
+    "wlogout".source = ../templates/ml4w-config/wlogout;
+    "rofi".source = ../templates/ml4w-config/rofi;
+    "kitty".source = ../templates/ml4w-config/kitty;
+    
+    # -- THE MISSING PIECES (You need these!) --
+    "swaync".source = ../templates/ml4w-config/swaync;               # Notification Center
+    "nwg-dock-hyprland".source = ../templates/ml4w-config/nwg-dock-hyprland; # The Bottom Dock
+    "waypaper".source = ../templates/ml4w-config/waypaper;           # Wallpaper Manager
+    "fastfetch".source = ../templates/ml4w-config/fastfetch;         # System Info Tool
+    
+    # -- ML4W SPECIFICS --
+    "matugen".source = ../templates/ml4w-config/matugen;             # Color generation tool
+    "xsettingsd".source = ../templates/ml4w-config/xsettingsd; # Syncs GTK themes instantly
+    "sidepad".source = ../templates/ml4w-config/sidepad;       # The Sidebar/Dashboard menu
+    "qt6ct".source = ../templates/ml4w-config/qt6ct;           # QT App Theming
+    "walker".source = ../templates/ml4w-config/walker;         # Application Runner (Alternative to Rofi)
+    
+    # -- ASSETS --
+    # Some themes look for assets in these specific folders
+    "ml4w".source = ../templates/ml4w-config/ml4w;
+    "ml4w.theme".source = ../templates/ml4w-config/ml4w;
 
-  # Link Waybar (The whole folder)
-  xdg.configFile."waybar".source = ../waybar;
-
-  # (Optional) Link Oh My Posh if you have it
-  # xdg.configFile."oh-my-posh/config.json".source = ../scripts/theme.json;
+    # -- OPTIONAL (Enable if you use them) --
+    # "nvim".source = .templates/ml4w-config/nvim;                 # Neovim Config
+    # "ohmyposh".source = .templates/ml4w-config/ohmyposh;         # Shell Prompt (HM handles this usually)
+  };
 }

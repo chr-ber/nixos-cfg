@@ -55,7 +55,8 @@
     catppuccin-gtk         # GTK Theme
     papirus-icon-theme     # Icon Theme
     bibata-cursors         # Cursor Theme
-
+    hyprpolkitagent        # Polkit Agent for Hyprland
+    
     # -- Terminal & Shell --
     kitty                  # GPU-accelerated Terminal Emulator
     alacritty              # Lightweight Terminal Backup
