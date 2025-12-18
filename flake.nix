@@ -11,28 +11,29 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  # 2. OUTPUTS (What to build)
+# 2. OUTPUTS (What to build)
   outputs = { self, nixpkgs, ... }@inputs: {
     nixosConfigurations = {
-      # Hostname: "nixos" (Must match networking.hostName in configuration.nix)
+      # Hostname: "nixos" (Must match networking.hostName in nixos/configuration.nix)
       nixos = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = { inherit inputs; }; # Pass inputs to modules
-
-      modules = [
+        specialArgs = { inherit inputs; };
+        
+        modules = [
           # Import your existing hardware/system config
           ./nixos/configuration.nix
-
-          # -- NEW: Home Manager Module --
-          home-manager.nixosModules.home-manager
+          
+          # Home Manager Module
+          inputs.home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
+            
+            home-manager.users.chrisleebear = {
+              imports = [ ./home/home.nix ];
+            };
 
-            # Import the user config we just made
-            home-manager.users.chrisleebear = import ./home/home.nix;
-
-            # Pass inputs to home-manager so it can use 'unstable' too
+            # Pass inputs to home-manager
             home-manager.extraSpecialArgs = { inherit inputs; };
           }
         ];
