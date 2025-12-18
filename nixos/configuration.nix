@@ -179,11 +179,6 @@
     # Browsers
     google-chrome
 
-    # Apps
-    spotify
-    discord
-    obsidian
-    
     # -- HYPRLAND ESSENTIALS --
     kitty     # The terminal (Hyprland needs this by default)
     wofi      # The app launcher (like Start Menu)

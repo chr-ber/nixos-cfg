@@ -19,9 +19,22 @@
         system = "x86_64-linux";
         specialArgs = { inherit inputs; }; # Pass inputs to modules
 
-        modules = [
+      modules = [
           # Import your existing hardware/system config
           ./nixos/configuration.nix
+
+          # -- NEW: Home Manager Module --
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+
+            # Import the user config we just made
+            home-manager.users.chrisleebear = import ./home/home.nix;
+
+            # Pass inputs to home-manager so it can use 'unstable' too
+            home-manager.extraSpecialArgs = { inherit inputs; };
+          }
         ];
       };
     };
