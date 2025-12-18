@@ -8,7 +8,6 @@
     "modules-center": ["clock"],
     "modules-right": ["pulseaudio", "network", "bluetooth", "battery", "tray"],
 
-    // -- MODULE CONFIG --
     "hyprland/workspaces": {
         "format": "{icon}",
         "on-click": "activate"

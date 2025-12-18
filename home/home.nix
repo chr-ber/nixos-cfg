@@ -25,6 +25,14 @@
     userEmail = "christopher.alexander.berger@gmail.com"; # Change this
   };
 
+  extraConfig = {
+    user = {
+      name = "chr-ber";
+      email = "christopher.alexander.berger@gmail.com";
+    };
+  };
+};
+
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage
   # when a new Home Manager release introduces backwards
