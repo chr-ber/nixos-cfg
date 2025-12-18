@@ -1,21 +1,57 @@
-home.packages = with pkgs; [
-    # -- ML4W CORE --
-    waybar
-    rofi-wayland
-    dunst                  # Notifications (He might use SwayNC, but Dunst is standard in his v2)
-    swaynotificationcenter # He often switches between these two
-    libnotify              # Required for sending notifications
+{ pkgs, ... }:
+
+{
+  home.packages = with pkgs; [
+    # ==========================================
+    # USER APPS
+    # ==========================================
     
-    # -- WALLPAPER & LOOK --
+    # -- BROWSERS --
+    google-chrome
+
+    # -- DEVELOPMENT --
+    vscode            # Code Editor
+    jetbrains.rider   # IDE
+    # antigravity     # (Note: This package likely doesn't exist in Nixpkgs. Commented out to prevent crash)
+
+    # -- SOCIAL / MEDIA --
+    spotify
+    discord
+    obsidian
+
+    # -- SYSTEM TOOLS --
+    zip
+    unzip
+    ripgrep          # Better grep
+    remmina          # RDP Client
+    polkit_gnome     # Key/Password Guard 
+    seahorse         # Password Manager GUI
+
+
+    # ==========================================
+    # ML4W CORE https://mylinuxforwork.github.io/dotfiles/getting-started/overview
+    # ==========================================
+    
+    # -- DESKTOP ENVIRONMENT --
+    waybar                 # Status Bar
+    rofi           # App Launcher
+    dunst                  # Notifications
+    swaynotificationcenter # Alternative Notifications
+    libnotify              # Required for sending notifications
+    wlogout                # Logout menu
+
+    # -- THEMING & LOOK --
     swww                   # Wallpaper Daemon
-    waypaper               # GUI for wallpapers (Crucial per the issue)
+    waypaper               # GUI for wallpapers
     nwg-look               # GTK Theme selector
     nwg-dock-hyprland      # The dock he uses
-    mpv                    # Video background player
+    catppuccin-gtk         # Window/App Theme
+    papirus-icon-theme     # Icons
+    bibata-cursors         # Cursor
     
     # -- TERMINAL & SHELL --
     kitty
-    alacritty              # He supports both, good to have just in case
+    alacritty
     zsh
     oh-my-posh
     fastfetch              # System info fetcher
@@ -29,8 +65,9 @@ home.packages = with pkgs; [
     grim                   # Screenshot
     slurp                  # Screenshot selection
     swappy                 # Screenshot editor
-    wlogout                # Logout menu
-    imagemagick            # Image manipulation (used by his scripts)
-    python3                # Needed for his python scripts
-    jq                     # JSON parser (needed for his scripts)
-];
+    mpv                    # Video player
+    imagemagick            # Image manipulation
+    python3                # For scripts
+    jq                     # JSON parser
+  ];
+}

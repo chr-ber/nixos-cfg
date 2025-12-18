@@ -7,47 +7,20 @@
   home.username = "chrisleebear";
   home.homeDirectory = "/home/chrisleebear";
 
-# ==========================================
-  # 2. IMPORTS (The "Table of Contents")
+  # ==========================================
+  # IMPORTS (The "Table of Contents")
   # ==========================================
   imports = [
-    #./shell.nix   # Your terminal settings
-    #./theme.nix   # Your look and feel
-    ./apps.nix    # Apps
+    # ./shell.nix   # (Uncomment when you populate this file)
+    # ./theme.nix   # (Uncomment when you populate this file)
+    ./apps.nix      # <--- All your packages are now inside here
   ];
 
   # ==========================================
-  # PACKAGES (User Apps & Tools)
+  # SYSTEM STATE VERSION
   # ==========================================
-  home.packages = with pkgs; [
-    # -- SYSTEM TOOLS --
-    zip
-    unzip
-    ripgrep          # Better grep
-    remmina          # RDP Client
-    polkit_gnome     # Key/Password Guard 
-    seahorse         # Password Manager GUI
-
-    # -- THEMING TOOLS --
-    catppuccin-gtk   # Window/App Theme
-    papirus-icon-theme # Icons
-    bibata-cursors   # Cursor
-    nwg-look         # GUI to verify themes
-
-    # -- DEVELOPMENT --
-    vscode            # Code Editor
-    jetbrains.rider   # IDE
-    oh-my-posh        # terminal styling
-    antigravity       # Google AI IDE
-
-    # -- BROWSERS --
-    google-chrome
-
-    # -- SOCIAL / MEDIA --
-    spotify
-    discord
-    obsidian
-  ];
+  home.stateVersion = "23.11";
+  programs.home-manager.enable = true;
 
   # ==========================================
   # GIT CONFIGURATION
@@ -184,13 +157,4 @@
 
   # (Optional) Link Oh My Posh if you have it
   # xdg.configFile."oh-my-posh/config.json".source = ../scripts/theme.json;
-
-
-  # ==========================================
-  # SYSTEM STATE VERSION
-  # ==========================================
-  home.stateVersion = "23.11";
-
-  # Let Home Manager install and manage itself.
-  programs.home-manager.enable = true;
 }
