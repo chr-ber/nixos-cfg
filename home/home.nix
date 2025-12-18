@@ -140,11 +140,11 @@
   programs.zsh = {
     enable = true;
     enableCompletion = true;
-    enableAutosuggestions = true;
+    autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
 
     # Oh My Posh Init
-    initExtra = ''
+    initConfig = ''
       eval "$(${pkgs.oh-my-posh}/bin/oh-my-posh init zsh --config ${config.home.homeDirectory}/dotfiles/home/p10k.omp.json)"
     '';
     
@@ -156,6 +156,8 @@
       g = "git";
       # Add this so 'gs' is git status (optional)
       gs = "git status";
+      flake-update = "~/dotfiles/scripts/update.sh";
+      flake-rebuild = "sudo nixos-rebuild switch --flake ~/dotfiles#nixos";
     };
   };
 
