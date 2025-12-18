@@ -216,8 +216,9 @@
   # FONTS (Crucial for the UI icons)
   # ==========================================
   fonts.packages = with pkgs; [
-    font-awesome  # Icons for Waybar
-    nerd-fonts    # Nerdfonts for Terminal
+    font-awesome              # Icons
+    nerd-fonts.fira-code      # Terminal font
+    nerd-fonts.jetbrains-mono # Coding font
   ];
 
   # ==========================================
