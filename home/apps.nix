@@ -6,8 +6,9 @@
     # Personal Apps
     # ==========================================
 
-    # -- Browsers --
+    # -- Browsers & their Friends --
     google-chrome
+    adguardhome     # Network-wide Ad Blocker
 
     # -- Development --
     vscode            # Code Editor
@@ -27,24 +28,29 @@
     htop              # Interactive Process Viewer
     btop              # Modern Resource Monitor
     polkit_gnome      # Authentication Agent (Pop-ups for sudo)
-    polkit            # Authentication Agent (Pop-ups for sudo)
+    polkit            # Authentication Agent
     seahorse          # GNOME Keyring Manager (Password GUI)
 
     # ==========================================
     # ML4W Dotfiles Dependencies
     # https://mylinuxforwork.github.io/dotfiles/getting-started/overview
-    # https://github.com/mylinuxforwork/dotfiles/blob/1164-nix/setup/nix/flake.nix
     # ==========================================
 
     # -- Desktop Environment --
     waybar                 # Status Bar for Wayland
-    rofi           # Application Launcher and Menu
+    rofi                   # Application Launcher and Menu
     wlogout                # Wayland Logout Menu
     swaynotificationcenter # Notification Daemon
     libnotify              # Library to send notifications
     hyprpaper              # Wallpaper Utility
     hyprlock               # Screen Locker
     hypridle               # Idle Management Daemon
+    
+    # -- File Management (ML4W Standard) --
+    xfce.thunar            # File Manager
+    xfce.thunar-archive-plugin
+    xfce.thunar-volman
+    file-roller            # Archive Manager (GUI for zip/unzip)
 
     # -- Theming & Look --
     nwg-look               # GTK3 Settings Editor for Wayland
@@ -56,7 +62,13 @@
     papirus-icon-theme     # Icon Theme
     bibata-cursors         # Cursor Theme
     hyprpolkitagent        # Polkit Agent for Hyprland
+    pywal                  # Pywal (Color palette generator)
     
+    # -- Qt Theming (Qt5 & Qt6) --
+    libsForQt5.qt5ct       # Qt5 Settings
+    kdePackages.qt6ct      # Qt6 Settings (New Standard)
+    libsForQt5.qtstyleplugin-kvantum # SVG-based Theme Engine for Qt
+
     # -- Terminal & Shell --
     kitty                  # GPU-accelerated Terminal Emulator
     alacritty              # Lightweight Terminal Backup
@@ -73,6 +85,8 @@
     wl-clipboard           # Wayland Clipboard Utilities
     brightnessctl          # Screen Brightness Control
     playerctl              # Command-line Media Player Controller
+    bc                     # Calculator (Required for many ML4W scripts)
+    socat                  # Socket utility (Required for Waybar IPC)
 
     # -- Screenshotting --
     grim                   # Grab Images from Wayland Compositor
@@ -102,7 +116,7 @@
     nerd-fonts.jetbrains-mono
     nerd-fonts.symbols-only
   ];
-  
-# Enable Fontconfig to discover the installed fonts
+
+  # Enable Fontconfig to discover the installed fonts
   fonts.fontconfig.enable = true;
 }

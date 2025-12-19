@@ -134,13 +134,12 @@
     # Aliases (Shortcuts)
     shellAliases = {
       ll = "ls -l";
-      update = "sudo nixos-rebuild switch --flake ~/dotfiles#nixos";
       c = "clear";
       g = "git";
-      # Add this so 'gs' is git status (optional)
       gs = "git status";
       flake-update = "~/dotfiles/scripts/update.sh";
       flake-rebuild = "sudo nixos-rebuild switch --flake ~/dotfiles#nixos";
+      flake-drybuild = "sudo nixos-rebuild dry-build --flake ~/dotfiles#nixos";
     };
   };
 

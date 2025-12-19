@@ -19,7 +19,7 @@
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  # CRITICAL: YOUR ENCRYPTION KEY
+  # CRITICAL: ENCRYPTION KEY
   boot.initrd.luks.devices."luks-0905c652-9881-4409-8c6f-63bf8d407254".device = "/dev/disk/by-uuid/0905c652-9881-4409-8c6f-63bf8d407254";
 
   # ==========================================
@@ -251,5 +251,4 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "25.11"; # Did you read the comment?
-
 }
