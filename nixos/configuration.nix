@@ -208,6 +208,20 @@
   };
 
   # ==========================================
+  # FIREWALL
+  # ==========================================
+  networking.firewall = {
+    enable = true;
+    # Open a sequential block for self hosted apps in local network (e.g., 10000 to 10050)
+    allowedTCPPortRanges = [
+      { from = 10000; to = 10050; }
+    ];
+    allowedUDPPortRanges = [
+      { from = 10000; to = 10050; }
+    ];
+  };
+
+  # ==========================================
   # ADGUARD HOME (DNS Blocker)
   # ==========================================
   services.adguardhome = {
@@ -215,7 +229,7 @@
     
     # 1. Open the Firewall
     # This allows devices on the network to send DNS queries to this PC
-    # and allows you to access the Web UI (initially port 3000)
+    # and allows you to access the Web UI (initially port 10000)
     openFirewall = true;
 
     # 2. Mutable Settings (Recommended: true)
@@ -223,10 +237,15 @@
     # false = You must configure EVERYTHING in this file (Hard mode)
     mutableSettings = true;
     
-    # 3. Initial Port
-    # The setup wizard runs here. After setup, it usually moves to port 80.
-    port = 3000;
+    # 3. Initial Port for setup wizard
+    port = 10000;
   };
+
+  # To make AdGuard Home the primary DNS resolver
+  # 1. Disable the default systemd resolver to free up Port 53
+  services.resolved.enable = false;
+  # 2. Tell NixOS to look at itself (localhost) for DNS
+  networking.nameservers = [ "127.0.0.1" "1.1.1.1" ];
 
   # ==========================================
   # FLAKES & NEW COMMANDS
