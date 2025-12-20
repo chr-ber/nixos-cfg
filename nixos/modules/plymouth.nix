@@ -3,14 +3,11 @@
 {
   boot.plymouth = {
     enable = true;
-    theme = "catppuccin-macchiato";
+    theme = "hexagon_dots";
     themePackages = with pkgs; [
-      # Catppuccin Theme
-      (catppuccin-plymouth.override {
-        variant = "macchiato";
-      })
-      # Breeze Theme
       kdePackages.breeze-plymouth
+      plymouth-matrix-theme
+      adi1090x-plymouth-themes # https://github.com/adi1090x/plymouth-themes?tab=readme-ov-file
     ];
   };
 
