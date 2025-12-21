@@ -143,7 +143,7 @@
   # ==========================================
   xdg.configFile = {
     "Kvantum".source = ./dotfiles-end4/Kvantum;
-    "fish".source = ./dotfiles-end4/fish;
+    "fish/config.fish".source = ./dotfiles-end4/fish/config.fish;
     "fontconfig/fonts.conf".source = ./dotfiles-end4/fontconfig/fonts.conf;
     "foot".source = ./dotfiles-end4/foot;
     "fuzzel".source = ./dotfiles-end4/fuzzel;
