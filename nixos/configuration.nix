@@ -112,6 +112,12 @@
   # Enable Hyprland (Selectable at login)
   programs.hyprland.enable = true;
 
+  # Enable ydotool for input automation (required by Quickshell)
+  programs.ydotool.enable = true;
+
+  # Enable I2C for monitor control (ddcutil)
+  hardware.i2c.enable = true;
+
   # ==========================================
   # AUDIO & PRINTING
   # ==========================================
@@ -143,7 +149,11 @@
   users.users.chrisleebear = {
     isNormalUser = true;
     description = "Chris";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ 
+      "networkmanager"
+      "wheel" 
+      "video" 
+      "input" ];
     packages = with pkgs; [];
   };
 

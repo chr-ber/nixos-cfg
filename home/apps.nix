@@ -83,6 +83,19 @@
     fish              # Smart and user-friendly command line shell
     eza               # A modern replacement for 'ls'
     python3           # Required for Quickshell scripts (keybinds)
+    cava              # Console-based Audio Visualizer for ALSA
+    bc                # Basic Calculator
+    ydotool           # Generic command-line automation tool
+    wtype             # xdotool type for wayland
+    hyprshot          # Screenshot utility
+    wf-recorder       # Wayland screen recorder
+    tesseract         # OCR engine
+    glib              # GLib (for gsettings)
+    songrec           # Shazam client for Linux
+    translate-shell   # Command-line translator
+    libqalculate      # Calculator library (provides qalc)
+    ddcutil           # Monitor settings control
+    geoclue2          # Geolocation service
     
     # -- Terminal Emulators --
     kitty             # GPU-accelerated terminal emulator
@@ -98,6 +111,11 @@
     nerd-fonts.symbols-only       # Font containing only symbols/icons from Nerd Fonts
     material-symbols              # Material Symbols font from Google
     papirus-icon-theme            # Standard icon theme used by the end-4 config
+    # otf-space-grotesk not available
+    hanken-grotesk                # Font used in Quickshell/matugen
+    # not available
+    #readex-pro                    # Font used in Quickshell
+    rubik                         # Font used in Hyprland/Quickshell
   ];
 
   # Enable Fontconfig to discover the installed fonts
