@@ -59,6 +59,11 @@
     swww              # Efficient animated wallpaper daemon for Wayland
     kdePackages.qt6ct # Qt6 configuration tool to apply themes to Qt applications
     kdePackages.qtwayland # Qt6 Wayland platform plugin
+    kdePackages.qtimageformats # Support for additional image formats (WebP, etc.) in Qt/Quickshell
+    kdePackages.kio-extras # Thumbnails and extra protocols for Dolphin
+    kdePackages.ffmpegthumbs # Video thumbnails for Dolphin
+    kdePackages.dolphin # File Manager
+    ffmpegthumbnailer # CLI video thumbnailer
     adw-gtk3          # Theme from libadwaita ported to GTK-3 for consistent look
     
     # -- System Utilities --

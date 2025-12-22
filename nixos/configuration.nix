@@ -153,7 +153,8 @@
       "networkmanager"
       "wheel" 
       "video" 
-      "input" ];
+      "input" 
+      "i2c" ];
     packages = with pkgs; [];
   };
 
@@ -270,6 +271,19 @@
     font-awesome              # Icons
     nerd-fonts.fira-code      # Terminal font
     nerd-fonts.jetbrains-mono # Coding font
+    
+    (pkgs.stdenv.mkDerivation {
+      pname = "google-sans-flex";
+      version = "git";
+      src = pkgs.fetchurl {
+        url = "https://github.com/end-4/google-sans-flex/archive/refs/heads/main.tar.gz";
+        sha256 = "sha256-XTMh9vp0BAziVLXVu73mCo5+xkejkZEZ27ZLAg6wDtA=";
+      };
+      installPhase = ''
+        mkdir -p $out/share/fonts/truetype
+        cp -r * $out/share/fonts/truetype/
+      '';
+    })
   ];
 
   # ==========================================

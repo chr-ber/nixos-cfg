@@ -50,6 +50,8 @@ in pkgs.stdenv.mkDerivation {
     # KDE Frameworks
     kdePackages.kirigami
     kdePackages.kdialog
+    kdePackages.kio-extras
+    kdePackages.ffmpegthumbs
   ];
 
   # Install phase: Wrap the binary with XDG_DATA_DIRS to ensure it finds necessary schemas
@@ -63,7 +65,8 @@ in pkgs.stdenv.mkDerivation {
       --prefix XDG_DATA_DIRS : ${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name} \
       --suffix XDG_DATA_DIRS : /var/run/current-system/sw/share \
       --suffix XDG_DATA_DIRS : /nix/var/nix/profiles/default/share \
-      --suffix XDG_DATA_DIRS : $HOME/.nix-profile/share
+      --suffix XDG_DATA_DIRS : $HOME/.nix-profile/share \
+      --suffix XDG_DATA_DIRS : /etc/profiles/per-user/$USER/share
       
     chmod +x $out/bin/qs
   '';

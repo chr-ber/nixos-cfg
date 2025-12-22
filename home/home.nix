@@ -166,4 +166,22 @@
     "starship.toml".source = ./dotfiles-end4/starship.toml;
     "thorium-flags.conf".source = ./dotfiles-end4/thorium-flags.conf;
   };
+
+  # ==========================================
+  # DATA LINKS (Icons, Konsole, etc)
+  # ==========================================
+  xdg.dataFile = {
+    "icons/illogical-impulse.svg".source = ./dotfiles-end4/.local/share/icons/illogical-impulse.svg;
+    "konsole".source = ./dotfiles-end4/.local/share/konsole;
+  };
+
+  # ==========================================
+  # DCONF SETTINGS (Gnome Fonts)
+  # ==========================================
+  dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      font-name = "Google Sans Flex Medium 11 @opsz=11,wght=500";
+      color-scheme = "prefer-dark";
+    };
+  };
 }
