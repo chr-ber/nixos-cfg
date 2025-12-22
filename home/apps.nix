@@ -110,6 +110,11 @@
     kitty             # GPU-accelerated terminal emulator
     foot              # Fast, lightweight and minimalist Wayland terminal emulator
 
+    # -- Custom Packages --
+    illogical-impulse-oneui4-icons
+    illogical-impulse-kvantum
+    illogical-impulse-hyprland-shaders
+
     # -- Fonts --
     font-awesome                  # Icon set for web and desktop
     fira-code                     # Monospaced font with programming ligatures

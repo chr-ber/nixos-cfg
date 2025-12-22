@@ -24,6 +24,13 @@
           # Import your existing hardware/system config
           ./nixos/configuration.nix
           
+          # Overlays to expose custom packages
+          {
+            nixpkgs.overlays = [
+              (final: prev: import ./pkgs { pkgs = prev; })
+            ];
+          }
+
           # Home Manager Module
           inputs.home-manager.nixosModules.home-manager
           {
