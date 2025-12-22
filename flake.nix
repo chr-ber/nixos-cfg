@@ -10,6 +10,11 @@
       url = "github:quickshell-mirror/quickshell/db1777c20b936a86528c1095cbcb1ebd92801402";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    illogical-impulse-dotfiles = {
+      url = "github:end-4/dots-hyprland";
+      flake = false;
+    };
   };
 
 # 2. OUTPUTS (What to build)
@@ -47,6 +52,7 @@
             home-manager.extraSpecialArgs = { 
               inherit inputs; 
               quickshell = inputs.quickshell;
+              illogical-impulse-dotfiles = inputs.illogical-impulse-dotfiles;
             };
           }
         ];
