@@ -8,8 +8,6 @@
 
 ## 🗺️ THE MAP (Directory Structure)
 
-Your system is defined entirely in this repository.
-
 ```text
 ~/dotfiles/
 ├── flake.nix              # 🧠 THE BRAIN: Entry point. Connects System & Home.
@@ -19,10 +17,10 @@ Your system is defined entirely in this repository.
 ├── home/
 │   ├── home.nix           # 🏠 THE TENANT: Symlinks, Theme logic, Shell.
 │   ├── apps.nix           # 📦 THE TOOLBOX: List of user apps to install.
-│   └── ml4w/              # 🎨 THE ADOPTED CONFIGS: Hyprland, Waybar, Scripts.
-│       ├── hypr/          # -> Edit monitors/keybinds here.
-│       ├── waybar/        # -> Edit bar style here.
-│       └── ...
+├── .artifacts/             # 🏗️ THE WORKSHOP: Non-tracked, imperative files.
+│   ├── build/             # 🧪 Test builds & binaries.
+│   ├── backup/            # 📸 Reference files & snapshots.
+│   └── sources/           # 📚 Cloned repos for sourcing code.
 └── .git/                  # ⏳ THE TIME MACHINE: Tracks history.
 ``` 
 
