@@ -41,6 +41,14 @@ in
           "9, monitor:HDMI-A-2"
           "10, monitor:HDMI-A-2"
         ];
+
+        # Keyboard Configuration
+        input = {
+          kb_layout = "de";
+          follow_mouse = 1;
+          touchpad.natural_scroll = "no";
+          sensitivity = 0;
+        };
       };
 
       # Sourcing External Config Files from the Flake Input
@@ -53,12 +61,8 @@ in
         source=${dotfiles}/.config/hypr/hyprland/colors.conf
         source=${dotfiles}/.config/hypr/hyprland/keybinds.conf
         
-        # Custom configs (you can override these locally if you want)
-        source=${dotfiles}/.config/hypr/custom/env.conf
-        source=${dotfiles}/.config/hypr/custom/execs.conf
-        source=${dotfiles}/.config/hypr/custom/general.conf
-        source=${dotfiles}/.config/hypr/custom/rules.conf
-        source=${dotfiles}/.config/hypr/custom/keybinds.conf
+        # NOTE: Custom configs are removed because we are using Pure Flake Input.
+        # Use 'settings' in this file to override instead.
       '';
     };
   
@@ -96,6 +100,5 @@ in
 
     xdg.configFile."hypr/hyprlock".source =                 "${illogical-impulse-dotfiles}/.config/hypr/hyprlock";
     xdg.configFile."hypr/shaders".source =                  "${illogical-impulse-dotfiles}/.config/hypr/shaders";
-    xdg.configFile."hypr/custom".source =                   "${illogical-impulse-dotfiles}/.config/hypr/custom";
   };
 }
