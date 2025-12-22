@@ -37,6 +37,6 @@ in
       kdePackages.syntax-highlighting
     ];
 
-    xdg.configFile."quickshell".source = "${illogical-impulse-dotfiles}/.config/quickshell";
+    xdg.configFile."quickshell".source = "${illogical-impulse-dotfiles}/dots/.config/quickshell";
   };
 }
