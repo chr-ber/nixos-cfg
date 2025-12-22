@@ -29,6 +29,21 @@ in
       fish.enable = mkEnableOption "Enable illogical-impulse fish";
       starship.enable = mkEnableOption "Enable illogical-impulse starship";
     };
+
+    theme = {
+      cursor = {
+        theme = lib.mkOption {
+          type = lib.types.str;
+          default = "Bibata-Modern-Ice";
+          description = "Cursor theme name";
+        };
+        package = lib.mkOption {
+          type = lib.types.package;
+          default = pkgs.bibata-cursors;
+          description = "Cursor theme package";
+        };
+      };
+    };
   };
 
   config = mkMerge [
