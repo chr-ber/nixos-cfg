@@ -20,7 +20,8 @@
     spotify           # Proprietary music streaming service
     discord           # All-in-one voice and text chat for gamers
     obsidian          # Knowledge base that operates on local Markdown files
-    whatsapp-for-mac  # WhatsApp messaging desktop client
+    # Build errors about unsupported platform
+    #whatsapp-for-mac  # WhatsApp messaging desktop client
     telegram-desktop  # Telegram messaging desktop client
     ferdium           # All in one messaging app (WhatsApp, Telegram, etc.)
 
