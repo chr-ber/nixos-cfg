@@ -22,7 +22,7 @@ in
         flake-eval-verbose = "nix eval --json .#nixosConfigurations.nixos.config.home-manager.users.chrisleebear.home.packages --apply 'pkgs: map (p: p.pname or p.name) pkgs' | jq -r '.[]' | sort | uniq";
       };
 
-      initExtra = ''
+      initContent = ''
         # Use the generated color scheme
 
         if test -f ~/.cache/ags/user/generated/terminal/sequences.txt; then

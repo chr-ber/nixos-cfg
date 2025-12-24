@@ -78,8 +78,7 @@ in
         }
         
         # --- AUTOSTART ---
-        # Start Kitty on Workspace 5 silently
-        exec-once = [workspace 5 silent] kitty
+        exec-once = [workspace 1 silent] kitty
       '';
     };
   

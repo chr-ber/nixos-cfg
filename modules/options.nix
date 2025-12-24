@@ -51,21 +51,18 @@ in
       xdg.configFile."Kvantum/Colloid".source = "${illogical-impulse-dotfiles}/dots/.config/Kvantum/Colloid";
       xdg.configFile."matugen".source = "${illogical-impulse-dotfiles}/dots/.config/matugen";
       xdg.configFile."mpv/mpv.conf".source = "${illogical-impulse-dotfiles}/dots/.config/mpv/mpv.conf";
-      
-      # We link the config, so we must ensure Fish is installed!
-      programs.fish.enable = true;
-      xdg.configFile."fish/config.fish".source = "${illogical-impulse-dotfiles}/dots/.config/fish/config.fish";
     })
     (mkIf (config.illogical-impulse.enable && config.illogical-impulse.dotfiles.kitty.enable) {
       xdg.configFile."kitty".source = "${illogical-impulse-dotfiles}/dots/.config/kitty";
-
       home.packages = [ pkgs.kitty ];
     })
-
     (mkIf (config.illogical-impulse.enable && config.illogical-impulse.dotfiles.starship.enable) {
       xdg.configFile."starship.toml".source = "${illogical-impulse-dotfiles}/dots/.config/starship.toml";
-
       home.packages = [ pkgs.starship ];
+    })
+    (mkIf (config.illogical-impulse.enable && config.illogical-impulse.dotfiles.fish.enable) {
+      xdg.configFile."fish/config.fish".source = lib.mkForce "${illogical-impulse-dotfiles}/dots/.config/fish/config.fish";
+      home.packages = [ pkgs.fish ];
     })
   ];
 }
