@@ -9,6 +9,7 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./modules/plymouth.nix
+      ./modules/sudo-rules.nix
     ];
 
   # ==========================================
