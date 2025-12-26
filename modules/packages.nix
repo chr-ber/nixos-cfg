@@ -110,22 +110,6 @@ in
       illogical-impulse-oneui4-icons
       illogical-impulse-kvantum
       illogical-impulse-hyprland-shaders
-
-      # -- Fonts --
-      font-awesome                  # Icon set for web and desktop
-      fira-code                     # Monospaced font with programming ligatures
-      fira-code-symbols             # Symbols for Fira Code
-      noto-fonts                    # Google Noto Fonts
-      noto-fonts-color-emoji        # Emoji Support
-      nerd-fonts.jetbrains-mono     # JetBrains Mono font patched with Nerd Font icons
-      nerd-fonts.symbols-only       # Font containing only symbols/icons from Nerd Fonts
-      material-symbols              # Material Symbols font from Google
-      papirus-icon-theme            # Standard icon theme used by the end-4 config
-      # otf-space-grotesk not available
-      hanken-grotesk                # Font used in Quickshell/matugen
-      # not available
-      #readex-pro                    # Font used in Quickshell
-      rubik                         # Font used in Hyprland/Quickshell
     ];
 
     # Enable Fontconfig to discover the installed fonts

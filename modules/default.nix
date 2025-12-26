@@ -8,5 +8,6 @@
     ./git.nix
     ./zsh.nix
     ./theme.nix
+    ./fonts.nix    
   ];
 }
