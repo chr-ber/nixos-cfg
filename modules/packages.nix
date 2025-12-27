@@ -21,6 +21,8 @@ in
       jetbrains.rider   # Cross-Platform .NET IDE
       remmina           # Remote Desktop Client
       antigravity       # Agent AGI (Google)
+      opencode
+      claude-code
 
       # -- Media / Office / Social --
       spotify           # Proprietary music streaming service
@@ -30,6 +32,7 @@ in
       #whatsapp-for-mac  # WhatsApp messaging desktop client
       telegram-desktop  # Telegram messaging desktop client
       ferdium           # All in one messaging app (WhatsApp, Telegram, etc.)
+      signal-desktop    # Signal private messenger desktop client
 
       # -- System Tools --
       zip               # Compressor/archiver for creating and modifying zipfiles
@@ -111,8 +114,5 @@ in
       illogical-impulse-kvantum
       illogical-impulse-hyprland-shaders
     ];
-
-    # Enable Fontconfig to discover the installed fonts
-    fonts.fontconfig.enable = true;
   };
 }
