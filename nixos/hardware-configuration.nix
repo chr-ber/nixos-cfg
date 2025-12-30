@@ -8,26 +8,24 @@
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "thunderbolt" "usbhid" "usb_storage" "sd_mod" ];
-  boot.initrd.kernelModules = [ ];
+  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "thunderbolt" "usb_storage" "usbhid" "sd_mod" ];
+  boot.initrd.kernelModules = [ "dm-snapshot" ];
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/mapper/luks-754e5c75-78b7-498e-ab46-ee58e7a02684";
-      fsType = "ext4";
+    { device = "/dev/mapper/vg_workstation-nixos";
+      fsType = "btrfs";
     };
 
-  boot.initrd.luks.devices."luks-754e5c75-78b7-498e-ab46-ee58e7a02684".device = "/dev/disk/by-uuid/754e5c75-78b7-498e-ab46-ee58e7a02684";
-
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/7983-968C";
+    { device = "/dev/disk/by-uuid/540E-493F";
       fsType = "vfat";
-      options = [ "fmask=0077" "dmask=0077" ];
+      options = [ "fmask=0022" "dmask=0022" ];
     };
 
   swapDevices =
-    [ { device = "/dev/mapper/luks-0905c652-9881-4409-8c6f-63bf8d407254"; }
+    [ { device = "/dev/mapper/vg_workstation-swap"; }
     ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
