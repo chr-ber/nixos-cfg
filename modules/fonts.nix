@@ -1,7 +1,5 @@
 { pkgs, lib, ... }:
 {
-    fonts.fontconfig.enable = true;
-
     home.packages = with pkgs; [
       # --- Nerd Fonts ---
       nerd-fonts.caskaydia-cove

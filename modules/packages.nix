@@ -13,9 +13,9 @@
       vscode            # Source code editor developed by Microsoft
       jetbrains.rider   # Cross-Platform .NET IDE
       remmina           # Remote Desktop Client
-      antigravity       # Agent AGI (Google)
-      opencode          # 
-      claude-code       # 
+      antigravity       # Google AGI agent
+      opencode          # Open source AGI agent
+      claude-code       # Anthropic AGI agent
 
       # -- Media / Office / Social --
       spotify           # Proprietary music streaming service

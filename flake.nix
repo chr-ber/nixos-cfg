@@ -14,9 +14,16 @@
     nixosConfigurations.wrkstn = nixpkgs.lib.nixosSystem {
       specialArgs = {inherit inputs;};
       modules = [
-        ./nixos/configuration.nix
+        ./hosts/wrkstn/configuration.nix
         inputs.home-manager.nixosModules.default
       ];
     };
+    nixosConfigurations.homesrvr = nixpkgs.lib.nixosSystem {
+      specialArgs = {inherit inputs;};
+      modules = [
+        ./hosts/homesrvr/configuration.nix
+        inputs.home-manager.nixosModules.default
+      ];
+    };    
   };
 }
