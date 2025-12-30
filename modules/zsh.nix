@@ -1,9 +1,5 @@
-{ config, lib, ... }:
-let
-  enabled = config.illogical-impulse.enable;
-in
+{ pkgs, lib, ... }:
 {
-  config = lib.mkIf enabled {
     programs.zsh = {
       enable = true;
       enableCompletion = true;
@@ -31,5 +27,4 @@ in
         fi
       '';
      }; 
-  };
 }

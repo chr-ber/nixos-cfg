@@ -1,12 +1,5 @@
-{ config, lib, pkgs, inputs, ... }:
-let
-  cfg = config.illogical-impulse;
-  nurPkgs = inputs.nur.legacyPackages.${pkgs.system};
-  customPkgs = import ../pkgs { inherit pkgs; };
-in
+{ pkgs, lib, ... }:
 {
-  config = lib.mkIf cfg.enable {
-    # Enable Fontconfig to discover the installed fonts
     fonts.fontconfig.enable = true;
 
     home.packages = with pkgs; [
@@ -34,5 +27,4 @@ in
       material-symbols              # Material Symbols font from Google
       papirus-icon-theme            # Standard icon theme used by the end-4 config
     ];
-  };
 }

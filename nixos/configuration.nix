@@ -1,9 +1,10 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, inputs, ... }:
 
 {
   imports =
     [
       ./hardware-configuration.nix
+      inputs.home-manager.nixosModules.default
     ];
 
   boot.loader.systemd-boot.enable = true;
@@ -56,13 +57,6 @@
     pkgs.xterm
   ];
 
-  services.xserver.xkb = {
-    layout = "de";
-    variant = "";
-  };
-
-  console.keyMap = "de";
-
   networking.hostName = "wrkstn";
   networking.networkmanager.enable = true;
 
@@ -75,7 +69,36 @@
   nixpkgs.config.allowUnfree = true;
 
   programs.hyprland.enable = true;
-  services.geoclue2.enable = true;  # For QtPositioning
+
+  # ==========================================
+  # LOCALE & TIME (Vienna)
+  # ==========================================
+  time.timeZone = "Europe/Vienna";
+
+  i18n.defaultLocale = "en_US.UTF-8";
+
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "de_AT.UTF-8";
+    LC_IDENTIFICATION = "de_AT.UTF-8";
+    LC_MEASUREMENT = "de_AT.UTF-8";
+    LC_MONETARY = "de_AT.UTF-8";
+    LC_NAME = "de_AT.UTF-8";
+    LC_NUMERIC = "de_AT.UTF-8";
+    LC_PAPER = "de_AT.UTF-8";
+    LC_TELEPHONE = "de_AT.UTF-8";
+    LC_TIME = "de_AT.UTF-8";
+  };
+
+  console.keyMap = "de";
+
+  services.xserver.xkb = {
+    layout = "de";
+    variant = "";
+  };
+
+  services.geoclue2.enable = true;
+
+  #############################################
 
   programs.gamemode.enable = true;
   
