@@ -1,6 +1,13 @@
 { config, pkgs, ... }:
 
 {
+  imports = [
+    ../../modules/packages-common.nix
+    ../../modules/packages-wrkstn.nix
+    ../../modules/git.nix
+    ../../modules/zsh.nix
+  ];
+
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "chrisleebear";
