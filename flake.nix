@@ -10,7 +10,12 @@
     };
   };
 
-  outputs = { self, nixpkgs, ... }@inputs: {
+  outputs = { self, nixpkgs, ... }@inputs: 
+  let
+    system = "x86_64-linux";
+    pkgs = nixpkgs.legacyPackages.${system};
+  in
+  {
     nixosConfigurations.wrkstn = nixpkgs.lib.nixosSystem {
       specialArgs = {inherit inputs;};
       modules = [
@@ -24,6 +29,19 @@
         ./hosts/homesrvr/configuration.nix
         inputs.home-manager.nixosModules.default
       ];
-    };    
+    };
+
+    homeConfigurations = {
+      wrkstn = inputs.home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        modules = [ ./hosts/wrkstn/home.nix ];
+        extraSpecialArgs = {inherit inputs;};
+      };
+      homesrvr = inputs.home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        modules = [ ./hosts/homesrvr/home.nix ];
+        extraSpecialArgs = {inherit inputs;};
+      };
+    };
   };
 }
