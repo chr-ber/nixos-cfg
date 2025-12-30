@@ -91,6 +91,7 @@
     wget
     git
     pciutils
+    direnv          # augments existing shells with a new feature that can load and unload environment variables
     google-chrome
     vscode
     antigravity
