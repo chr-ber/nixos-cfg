@@ -59,6 +59,36 @@
     # '';
   };
 
+  xdg.configFile = {
+    "hypr/custom/rules.conf".text = ''
+      monitor = DP-4, 3440x1440@100, 0x0, 1
+      monitor = HDMI-A-2, 2560x1440@75, 3440x0, 1
+
+      workspace = 1, monitor:DP-4
+      workspace = 3, monitor:DP-4
+      workspace = 5, monitor:DP-4
+      workspace = 7, monitor:DP-4
+      workspace = 9, monitor:DP-4
+
+      workspace = 2, monitor:HDMI-A-2
+      workspace = 4, monitor:HDMI-A-2
+      workspace = 6, monitor:HDMI-A-2
+      workspace = 8, monitor:HDMI-A-2
+      workspace = 10, monitor:HDMI-A-2
+    '';
+
+    "hypr/custom/general.conf".text = ''
+      input {
+          kb_layout = de
+          follow_mouse = 1
+          touchpad {
+              natural_scroll = no
+          }
+          sensitivity = 0
+      }
+    '';
+  };
+
   # Home Manager can also manage your environment variables through
   # 'home.sessionVariables'. These will be explicitly sourced when using a
   # shell provided by Home Manager. If you don't want to manage your shell
