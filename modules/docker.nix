@@ -14,6 +14,9 @@
     
     environment.systemPackages = with pkgs; [
       docker-compose
+      lazydocker
+    ] ++ lib.optionals config.services.desktopManager.gnome.enable [
+      gnomeExtensions.docker
     ];
   };
 }
