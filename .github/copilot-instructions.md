@@ -16,9 +16,9 @@ Key components:
 - **Dry run build**: `sudo nixos-rebuild dry-build --flake .#wrkstn`
 - **Check flake validity**: `nix flake check`
 - **Update flake inputs**: `nix flake update`
-- **Evaluate home packages**: `nix eval --json .#nixosConfigurations.wrkstn.config.home-manager.users.chrisleebear.home.packages --apply 'pkgs: map (p: p.name) pkgs' | jq -r '.[]' | sort`
+- **Evaluate home packages**: `nix eval --json .#homeConfigurations.wrkstn.config.home.packages --apply 'pkgs: map (p: p.name) pkgs' | nix run nixpkgs#jq -- -r '.[]' | sort`
 
-Shell aliases in `modules/zsh.nix` provide shortcuts like `flake-rebuild`, `flake-drybuild`, `flake-list-home-pkgs` (lists home packages to verify before rebuild).
+Shell aliases in `modules/zsh.nix` provide shortcuts like `flake-rebuild`, `flake-drybuild`, `flake-list-home-pkgs` (lists home packages with proper formatting).
 
 ## Project Conventions
 - **Package lists**: Use `with pkgs; [ pkg1 pkg2 ]` syntax for readability

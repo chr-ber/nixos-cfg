@@ -91,14 +91,11 @@
     vim
     wget
     git
-    pciutils
-    direnv          # augments existing shells with a new feature that can load and unload environment variables
+    direnv
     google-chrome
     vscode
     antigravity
-    ripgrep
-    opencode
-    claude-code
+    pciutils
   ];
 
   # garbage collect generations

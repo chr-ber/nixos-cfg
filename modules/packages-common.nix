@@ -6,7 +6,8 @@
       # ==========================================
 
       # -- Browsers & their Friends --
-      google-chrome     # Web browser from Google
+      google-chrome
+      brave
 
       # -- Development --
       vscode            # Source code editor developed by Microsoft
@@ -15,7 +16,7 @@
       antigravity       # Google AGI agent
       opencode          # Open source AGI agent
       claude-code       # Anthropic AGI agent
-
+      
       # -- System Tools --
       zip               # Compressor/archiver for creating and modifying zipfiles
       unzip             # Decompressor for zip files
@@ -23,9 +24,17 @@
       fzf               # General-purpose command-line fuzzy finder
       htop              # Interactive process viewer
       btop              # A monitor of resources
+      psmisc            # Utilities for process management (killall, etc.)
       jq                # Lightweight and flexible command-line JSON processor
       polkit_gnome      # PolicyKit authentication agent
       polkit            # Toolkit for controlling system-wide privileges
       seahorse          # Application for managing encryption keys and passwords in the GNOME Keyring
+      zsh               # Z shell
+      direnv            # Directory-based environment variable management
+      pciutils          # Utilities for PCI devices
+      fzf               # General-purpose command-line fuzzy finder
+      eza               # ls replacement, gives you directory listings with more information, color, and icons
+      fd                # Simple, fast and user-friendly alternative to find
+      zoxide            # Replacement for cd, for fast directory navigation
     ];
 }

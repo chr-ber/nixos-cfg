@@ -31,17 +31,15 @@
       ];
     };
 
-    homeConfigurations = {
-      wrkstn = inputs.home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-        modules = [ ./hosts/wrkstn/home.nix ];
-        extraSpecialArgs = {inherit inputs;};
-      };
-      homesrvr = inputs.home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-        modules = [ ./hosts/homesrvr/home.nix ];
-        extraSpecialArgs = {inherit inputs;};
-      };
+    homeConfigurations.wrkstn = inputs.home-manager.lib.homeManagerConfiguration {
+      inherit pkgs;
+      modules = [ ./hosts/wrkstn/home.nix ];
+      extraSpecialArgs = {inherit inputs;};
+    };
+    homeConfigurations.homesrvr = inputs.home-manager.lib.homeManagerConfiguration {
+      inherit pkgs;
+      modules = [ ./hosts/homesrvr/home.nix ];
+      extraSpecialArgs = {inherit inputs;};
     };
   };
 }

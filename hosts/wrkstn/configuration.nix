@@ -118,12 +118,11 @@
     google-chrome
     vscode
     antigravity
-    spotify
-    discord
     ripgrep
     remmina
-    opencode
-    claude-code
+    zsh
+    psmisc
+    home-manager
   ];
 
   fonts.packages = with pkgs; [
