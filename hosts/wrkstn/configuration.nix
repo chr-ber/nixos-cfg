@@ -62,6 +62,36 @@
   networking.hostName = "wrkstn";
   networking.networkmanager.enable = true;
 
+  security.rtkit.enable = true;
+  services.pulseaudio.enable = false;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    jack.enable = true;
+  };
+
+  # Fix for EPOS GSA 70 "Broken Pipe" / Zombie issues
+  environment.etc."wireplumber/wireplumber.conf.d/51-epos-fix.conf".text = ''
+    monitor.alsa.rules = [
+      {
+        matches = [
+          {
+            "node.name" = "~alsa_output.*Sennheiser_EPOS_GSA_70.*"
+          }
+        ]
+        actions = {
+          update-props = {
+            "session.suspend-timeout-seconds" = 0
+            "api.alsa.period-size" = 1024
+            "api.alsa.headroom" = 8192
+          }
+        }
+      }
+    ]
+  '';
+
   users.users.chrisleebear = {
     isNormalUser = true;
     description = "ChrisLeeBear";
@@ -132,6 +162,8 @@
     google-chrome
     vscode
     pciutils
+    pwvucontrol
+    qjackctl
   ];
 
   # garbage collect generations
