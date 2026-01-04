@@ -5,27 +5,28 @@
 
 ---
 
-## 🗺️ THE MAP (Directory Structure)
+## 🗺️ Directory Structure
 
 ```text
 ~/nixos-cfg/
-├── hosts/                     # 🏗️ Systems: Host based configuration
+├── hosts/                     # Systems: Host based configuration
 │   ├── hmsrvr/
-│   │   ├── configuration.nix  # 🖥 System settings, drivers, services
-│   │   ├── hardware-config... # ⚙️ Hardware configuration (auto generated)
-│   │   └── home.nix           # 🏰 Home settings, apps, shell
+│   │   ├── configuration.nix  # System settings, drivers, services
+│   │   ├── hardware-config... # Hardware configuration (auto generated)
+│   │   └── home.nix           # Home settings, apps, shell
 │   └── wrkstn/
-│   │   ├── configuration.nix  # 🖥 System settings, drivers, services
-│   │   ├── hardware-config... # ⚙️ Hardware configuration (auto generated)
-│   │   └── home.nix           # 🏰 Home settings, apps, shell
-├── modules/                   # 📐 Reusable configs
-├── scripts/                   # 🛠️ Scripts for common tasks
-├── flake.nix                  # 🧠 Entry point. Connects system and home
-├── flake.lock                 # 🔒 Records the exact versions of all dependencies
-└──.cache/                     # 🏗️ Non-tracked, imperative files
-    ├── build/                 # 🧪 Test builds & binaries
-    ├── backup/                # 📸 Reference files & snapshots
-    └── sources/               # 📚 Cloned repos for source access
+│   │   ├── configuration.nix  # System settings, drivers, services
+│   │   ├── hardware-config... # Hardware configuration (auto generated)
+│   │   └── home.nix           # Home settings, apps, shell
+├── modules/                   # Reusable configs
+├── docker/                    # Docker compose files
+├── scripts/                   # Scripts for common tasks
+├── flake.nix                  # Entry point. Connects system and home
+├── flake.lock                 # Records the exact versions of all dependencies
+└──.cache/                     # Non-tracked, imperative files
+    ├── builds/                # Test builds & binaries
+    ├── backup/                # Reference files & snapshots
+    └── sources/               # Cloned repos for source access
 ``` 
 
 ## 🧩 Component Architecture
