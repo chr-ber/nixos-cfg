@@ -95,7 +95,9 @@
       exec-once = [workspace 1 silent] vivaldi
       exec-once = [workspace 4 silent] discord --start-minimized
       exec-once = [workspace 4 silent] kitty btop
-      exec-once = [workspace 5 silent] spotify
+
+      exec-once = [workspace 5 silent] spotify 
+      exec-once = sleep 5 && playerctl --player=spotify play
     '';
   };
 

@@ -99,6 +99,46 @@
     }
   ];
 
+  services.spotifyd = {
+    enable = true;
+    settings = {
+      global = {
+        username = "crytas";
+        password_cmd = "cat /etc/nixos/spotify-pass";
+        
+        device_name = "wrkstn-daemon";
+        device_type = "computer";
+        
+        backend = "alsa";
+        bitrate = 320;
+        
+        #cache_path = "/var/cache/spotifyd";
+        no_audio_cache = false; 
+      };
+    };
+  };
+
+  #networking.firewall = {
+  #  allowedTCPPorts = [ 57621 ]; 
+  #  allowedUDPPorts = [ 5353 ]; 
+  #};
+
+  #users = {
+  #  users.spotifyd = {
+  #    isSystemUser = true;
+  #    home = "/home/spotifyd";
+  #    createHome = true;
+  #    description = "spotifyd";
+  #    group = "spotifyd";
+  #    shell = pkgs.bash;
+  #    extraGroups = [ 
+  #      "audio"
+  #      "pipewire" 
+  #    ];
+  #  };
+  #  groups.spotifyd = {};
+  #};
+
 # ==========================================
 # users
 # ==========================================
