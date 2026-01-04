@@ -60,6 +60,12 @@
   };
 
   xdg.configFile = {
+
+    # TODO: fix quickshell crash on nixos rebuild
+    "hypr/custom/env.conf".text = ''
+      env = qsConfig,ii
+    '';
+
     "hypr/custom/rules.conf".text = ''
       monitor = DP-4, 3440x1440@100, 0x0, 1
       monitor = HDMI-A-2, 2560x1440@75, 3440x0, 1
@@ -93,11 +99,9 @@
 
     "hypr/custom/execs.conf".text = ''
       exec-once = [workspace 1 silent] vivaldi
-      exec-once = [workspace 4 silent] discord --start-minimized
+      exec-once = [workspace 4 silent] discord
       exec-once = [workspace 4 silent] kitty btop
-
-      exec-once = [workspace 5 silent] spotify 
-      exec-once = sleep 5 && playerctl --player=spotify play
+      exec-once = [workspace 5 silent] spotify
     '';
   };
 
