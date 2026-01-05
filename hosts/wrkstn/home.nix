@@ -73,18 +73,16 @@
 
       workspace = 1, monitor:DP-4
       workspace = 2, monitor:DP-4
+      workspace = 3, monitor:DP-4
+      workspace = 4, monitor:DP-4
 
-      workspace = 5, monitor:DP-4
-      workspace = 6, monitor:DP-4
+      workspace = 5, monitor:HDMI-A-2
+      workspace = 6, monitor:HDMI-A-2
+      workspace = 7, monitor:HDMI-A-2
+      workspace = 8, monitor:HDMI-A-2
 
       workspace = 9, monitor:DP-4
       workspace = 10, monitor:DP-4
-
-      workspace = 3, monitor:HDMI-A-2
-      workspace = 4, monitor:HDMI-A-2
-
-      workspace = 7, monitor:HDMI-A-2
-      workspace = 8, monitor:HDMI-A-2
     '';
 
     "hypr/custom/general.conf".text = ''
@@ -100,9 +98,9 @@
 
     "hypr/custom/execs.conf".text = ''
       exec-once = [workspace 1 silent] vivaldi
-      exec-once = [workspace 4 silent] discord
-      exec-once = [workspace 4 silent] kitty btop
-      exec-once = [workspace 5 silent] spotify
+      exec-once = [workspace 5 silent] discord
+      exec-once = [workspace 5 silent] kitty btop
+      exec-once = [workspace 8 silent] spotify && playctrl play
     '';
   };
 
