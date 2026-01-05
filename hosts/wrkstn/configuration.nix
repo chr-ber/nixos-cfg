@@ -60,6 +60,8 @@
   services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
   
+  programs.hyprland.enable = true;
+
   services.xserver.enable = true;
   services.xserver.excludePackages = [
     pkgs.xterm
@@ -235,9 +237,8 @@ services.cockpit = {
 # ==========================================
 # packages
 # ==========================================
-  programs.hyprland.enable = true; 
   services.flatpak.enable = true;
-  
+
   programs.gamemode.enable = true;
   programs.steam = {
     enable = true;
