@@ -58,6 +58,9 @@
   };
 
   services.displayManager.gdm.enable = true;
+  services.displayManager.autoLogin.enable = true;
+  services.displayManager.autoLogin.user = "chrisleebear";
+
   services.desktopManager.gnome.enable = true;
   
   programs.hyprland.enable = true;
@@ -114,16 +117,15 @@
         backend = "alsa";
         bitrate = 320;
         
-        #cache_path = "/var/cache/spotifyd";
         no_audio_cache = false; 
       };
     };
   };
 
-  #networking.firewall = {
-  #  allowedTCPPorts = [ 57621 ]; 
-  #  allowedUDPPorts = [ 5353 ]; 
-  #};
+  networking.firewall = {
+    allowedTCPPorts = [ 57621 ]; 
+    allowedUDPPorts = [ 5353 ]; 
+  };
 
   #users = {
   #  users.spotifyd = {
