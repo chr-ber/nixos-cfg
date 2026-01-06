@@ -36,8 +36,8 @@
       fzf               # General-purpose command-line fuzzy finder
       eza               # ls replacement, gives you directory listings with more information, color, and icons
       fd                # Simple, fast and user-friendly alternative to find
-      zoxide            # Replacement for cd, for fast directory navigation
       gh                # GitHub CLI
       lnav              # Log file viewer
+      inotify-tools     # Monitor and act upon filesystem events
     ];
 }

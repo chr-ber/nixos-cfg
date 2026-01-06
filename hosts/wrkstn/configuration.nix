@@ -34,7 +34,7 @@
   nixpkgs.config.allowUnfree = true;
   nix.settings.experimental-features = [ "nix-command" "flakes"];
 
-  system.stateVersion = "26.05";
+  system.stateVersion = "25.11";
 
   hardware.cpu.amd.updateMicrocode = true;
   hardware.enableAllFirmware = true;  
@@ -141,6 +141,8 @@
   #  groups.spotifyd = {};
   #};
 
+programs.fish.enable = true;
+
 # ==========================================
 # users
 # ==========================================
@@ -154,6 +156,7 @@
       "input" 
       "i2c" 
     ];
+    shell = pkgs.fish;
   };
 
 # ==========================================
@@ -251,7 +254,6 @@ services.cockpit = {
     vim
     wget
     git
-    direnv
     google-chrome
     vscode
     pciutils

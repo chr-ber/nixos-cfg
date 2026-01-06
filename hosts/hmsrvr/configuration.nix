@@ -98,7 +98,6 @@
     vim
     wget
     git
-    direnv
     google-chrome
     vscode
     pciutils
