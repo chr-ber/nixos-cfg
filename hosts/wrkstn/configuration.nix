@@ -5,6 +5,8 @@
     [
       ./hardware-configuration.nix
       ../../modules/docker.nix
+      ../../modules/nix-gc.nix
+      ../../modules/steam.nix
     ];
 
   custom.docker.enable = true;
@@ -258,11 +260,4 @@ services.cockpit = {
     qjackctl
   ];
 
-# ========================================== 
-# garbage collection
-# ========================================== 
-  nix.gc.automatic = true;
-  nix.gc.dates = "weekly";
-  nix.gc.options = "--delete-older-than 14d";
-  nix.settings.auto-optimise-store = true;
 }
