@@ -39,5 +39,7 @@
       gh                # GitHub CLI
       lnav              # Log file viewer
       inotify-tools     # Monitor and act upon filesystem events
+      just              # Command-line task runner
+      nh                # Nix CLI helper
     ];
 }

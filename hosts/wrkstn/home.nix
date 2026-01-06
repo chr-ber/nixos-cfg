@@ -87,11 +87,6 @@
   # Illogical Impulse Configuration
   programs.illogical-impulse = {
     enable = true;
-    dotfiles = {
-      fish.enable = true;
-      kitty.enable = true;
-      starship.enable = true;
-    };
   };
 
   programs.home-manager.enable = true;
