@@ -1,9 +1,9 @@
-{ config, pkgs, inputs, usr, ... }:
+{ config, pkgs, illogical-flake, nix-flatpak, usr, ... }:
 
 {
   imports = [
-    inputs.illogical-flake.homeManagerModules.default
-    inputs.nix-flatpak.homeManagerModules.nix-flatpak
+    illogical-flake.homeManagerModules.default
+    nix-flatpak.homeManagerModules.nix-flatpak
     ../../modules/packages-common.nix
     ../../modules/packages-wrkstn.nix
     ../../modules/git.nix
@@ -16,6 +16,7 @@
     ../../modules/starship.nix
     ../../modules/fish.nix
     ../../modules/hypr/default.nix
+    ../../modules/spotifyd/home.nix
   ];
 
   # Home Manager needs a bit of information about you and the paths it should

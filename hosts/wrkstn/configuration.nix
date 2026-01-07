@@ -7,6 +7,8 @@
       ../../modules/docker.nix
       ../../modules/nix-gc.nix
       ../../modules/steam.nix
+      ../../modules/spotifyd/system.nix
+      ../../modules/home-manager.nix
     ];
 
   custom.docker.enable = true;
@@ -123,28 +125,7 @@
     }
   ];
 
-  services.spotifyd = {
-    enable = true;
-    settings = {
-      global = {
-        username = "crytas";
-        password_cmd = "cat /etc/nixos/spotify-pass";
-        
-        device_name = "wrkstn-daemon";
-        device_type = "computer";
-        
-        backend = "alsa";
-        bitrate = 320;
-        
-        no_audio_cache = false; 
-      };
-    };
-  };
 
-  networking.firewall = {
-    allowedTCPPorts = [ 57621 ]; 
-    allowedUDPPorts = [ 5353 ]; 
-  };
 
 # ==========================================
 # users
@@ -167,14 +148,7 @@
 # ==========================================
 # home-manager
 # ==========================================
-  home-manager = {
-    extraSpecialArgs = { inherit inputs usr; };
-    users.${usr.name} = import ./home.nix;
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    # address clobbering of files, by moving them to a new location in the same director
-    backupFileExtension = "backup";
-  };
+  home-manager.users.${usr.name}.imports = [ ./home.nix ];
 
 # ========================================== 
 # fonts

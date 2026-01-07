@@ -1,4 +1,6 @@
 {
+  description = "chr-ber's nixos hosts configuration";
+
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
@@ -25,7 +27,11 @@
 
   outputs = 
   { 
-    self, nixpkgs, home-manager, illogical-flake, ... 
+    self,
+    nixpkgs,
+    home-manager,
+    illogical-flake,
+    ... 
   }@inputs: 
   let
     system = "x86_64-linux";
@@ -39,7 +45,10 @@
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;
 
     nixosConfigurations.wrkstn = nixpkgs.lib.nixosSystem {
-      specialArgs = { inherit inputs usr; };
+      inherit system;
+      specialArgs = inputs // {
+        inherit usr;
+      };      
       modules = [
         ./hosts/wrkstn/configuration.nix
         inputs.home-manager.nixosModules.default
@@ -48,10 +57,14 @@
     };
 
     nixosConfigurations.hmsrvr = nixpkgs.lib.nixosSystem {
-      specialArgs = { inherit inputs usr; };
+      inherit system;
+      specialArgs = inputs // {
+        inherit usr;
+      };
       modules = [
         ./hosts/hmsrvr/configuration.nix
         inputs.home-manager.nixosModules.default
+        inputs.nix-flatpak.nixosModules.nix-flatpak
       ];
     };
   };

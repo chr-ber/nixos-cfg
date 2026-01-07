@@ -6,6 +6,9 @@ reload:
 switch:
     nh os switch .
 
+switch-dry:
+    nh os switch --dry .    
+
 build:
     nh os build .
 

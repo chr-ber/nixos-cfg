@@ -53,9 +53,9 @@
     };
   };
 
-  users.users.${usr.Name}.extraGroups = [ "gamemode" ];
+  users.users.${usr.name}.extraGroups = [ "gamemode" ];
 
-  home-manager.users.${usr.Name} = {
+  home-manager.users.${usr.name} = {
     programs.mangohud.enable = true;
   };
 }

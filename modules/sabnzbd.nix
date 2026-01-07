@@ -9,5 +9,5 @@
     enable = true;
   };
 
-  users.users.${usr.Name}.extraGroups = [ "sabnzbd" ];
+  users.users.${usr.name}.extraGroups = [ "sabnzbd" ];
 }

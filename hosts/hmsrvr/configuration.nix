@@ -1,4 +1,4 @@
-{ config, pkgs, lib, inputs, usr, ... }:
+{ config, pkgs, lib, usr, ... }:
 
 {
   imports =
@@ -6,6 +6,7 @@
       ./hardware-configuration.nix
       ../../modules/docker.nix
       ../../modules/nix-gc.nix
+      ../../modules/home-manager.nix
     ];
 
   custom.docker.enable = true;
@@ -70,14 +71,7 @@
     ];
   };
 
-  home-manager = {
-    extraSpecialArgs = { inherit inputs usr; };
-    users.${usr.name} = import ./home.nix;
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    # address clobbering of files, by moving them to a new location in the same director
-    backupFileExtension = "backup";    
-  };
+  home-manager.users.${usr.name}.imports = [ ./home.nix ];
 
   nixpkgs.config.allowUnfree = true;
 
