@@ -10,9 +10,9 @@
       init = {
         defaultBranch = "main";
       };
-    };
-    extraConfig = {
-      credential.helper = "store";
+      credential = {
+        helper = "store";
+      };
     };
   };
 

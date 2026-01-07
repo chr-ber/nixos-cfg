@@ -45,11 +45,11 @@
     formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;
 
     nixosConfigurations.wrkstn = nixpkgs.lib.nixosSystem {
-      inherit system;
       specialArgs = inputs // {
         inherit usr;
       };      
       modules = [
+        { nixpkgs.hostPlatform = system; }
         ./hosts/wrkstn/configuration.nix
         inputs.home-manager.nixosModules.default
         inputs.nix-flatpak.nixosModules.nix-flatpak
@@ -57,11 +57,11 @@
     };
 
     nixosConfigurations.hmsrvr = nixpkgs.lib.nixosSystem {
-      inherit system;
       specialArgs = inputs // {
         inherit usr;
       };
       modules = [
+        { nixpkgs.hostPlatform = system; }
         ./hosts/hmsrvr/configuration.nix
         inputs.home-manager.nixosModules.default
         inputs.nix-flatpak.nixosModules.nix-flatpak
