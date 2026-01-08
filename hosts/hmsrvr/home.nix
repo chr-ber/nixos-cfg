@@ -18,17 +18,7 @@
 
   home.username = usr.name;
   home.homeDirectory = "/home/${usr.name}";
+
   home.stateVersion = "25.11";
-
-  home.packages = with pkgs; [
-    eza
-    bat
-    fd
-    ripgrep
-    fastfetch
-    htop
-    ncdu
-  ];
-
   programs.home-manager.enable = true;
 }

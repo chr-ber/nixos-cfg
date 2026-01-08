@@ -19,9 +19,14 @@
     fd                # Simple, fast and user-friendly alternative to find
     eza               # Modern ls replacement with icons and colors
 
+    # -- File Viewing --
+    bat               # Cat clone with syntax highlighting and git integration
+    
     # -- Process & System --
     htop              # Interactive process viewer
     btop              # Resource monitor with graphs (prettier htop)
+    ncdu              # Disk usage analyzer with ncurses interface
+    fastfetch         # Fast system info tool (neofetch replacement)
     psmisc            # Utilities for process management (killall, fuser, pstree)
     pciutils          # Utilities for PCI devices (lspci)
 
