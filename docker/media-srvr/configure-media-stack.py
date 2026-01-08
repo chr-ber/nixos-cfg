@@ -2,7 +2,7 @@
 """
 Media Stack Configuration Script
 
-Configures qBittorrent, Sonarr, Radarr, and Prowlarr via their APIs.
+Configures SABnzbd, Sonarr, Radarr, and Prowlarr via their APIs.
 Run this after the stack is up and you've set API keys in .env
 
 Usage:
@@ -33,24 +33,19 @@ PORTS = {
     "radarr": 10103,
     "bazarr": 10104,
     "overseerr": 10105,
-    "qbittorrent": 10106,
+    "sabnzbd": 10106,
 }
 
-# qBittorrent settings
-QBIT_CONFIG = {
-    "save_path": "/data/torrents/mixed",
-    "temp_path": "/data/torrents/incomplete",
-    "temp_path_enabled": True,
-    "max_ratio": 2.0,
-    "max_seeding_time": 1440,  # 24 hours in minutes
-    "max_ratio_act": 1,  # 0=pause, 1=remove
+# SABnzbd settings
+SABNZBD_CONFIG = {
+    "complete_dir": "/data/usenet/complete",
+    "incomplete_dir": "/data/usenet/incomplete",
 }
 
-QBIT_CATEGORIES = {
-    "movies": "/data/torrents/movies",
-    "tv": "/data/torrents/tv",
+SABNZBD_CATEGORIES = {
+    "movies": "/data/usenet/complete/movies",
+    "tv": "/data/usenet/complete/tv",
 }
-
 
 # ============================================================================
 # Helper Functions
@@ -70,7 +65,7 @@ def load_env():
                     env[key.strip()] = value.strip()
     
     # Also check environment variables
-    for key in ["SONARR_API_KEY", "RADARR_API_KEY", "PROWLARR_API_KEY"]:
+    for key in ["SONARR_API_KEY", "RADARR_API_KEY", "PROWLARR_API_KEY", "SABNZBD_API_KEY"]:
         if key in os.environ:
             env[key] = os.environ[key]
     
@@ -93,63 +88,68 @@ def api_request(method, url, api_key=None, **kwargs):
 
 
 # ============================================================================
-# qBittorrent Configuration
+# SABnzbd Configuration
 # ============================================================================
 
-def configure_qbittorrent(host):
-    """Configure qBittorrent settings and categories"""
-    base_url = f"http://{host}:{PORTS['qbittorrent']}/api/v2"
-    session = requests.Session()
+def configure_sabnzbd(host, sabnzbd_key):
+    """Configure SABnzbd host_whitelist and categories.
     
-    print("\n📦 Configuring qBittorrent...")
+    Note: SABnzbd API key is shown on first launch. Categories can be set up
+    via the API once you have the key, but initial setup is done via web UI.
+    """
+    base_url = f"http://{host}:{PORTS['sabnzbd']}/api"
     
-    # Login (default credentials)
-    print("  → Logging in...")
-    resp = session.post(f"{base_url}/auth/login", data={
-        "username": "admin",
-        "password": "adminadmin"
-    })
+    print("\n📦 Configuring SABnzbd...")
     
-    if resp.text != "Ok.":
-        print("  ✗ Login failed. Have you changed the default password?")
-        print("    Default: admin / adminadmin")
-        return False
+    if not sabnzbd_key:
+        print("  ℹ SABnzbd requires initial web UI setup.")
+        print(f"  → Open: http://{host}:{PORTS['sabnzbd']}/")
+        print("  → Complete the wizard to get your API key")
+        print("  → Add categories 'tv' and 'movies' in Config → Categories")
+        print("    Set paths to:")
+        for name, path in SABNZBD_CATEGORIES.items():
+            print(f"      - {name}: {path}")
+        return True
     
-    print("  ✓ Logged in successfully")
+    # Configure host_whitelist to allow connections from Docker network
+    print("  → Configuring host whitelist...")
+    whitelist_hosts = ["sabnzbd", "sabnzbd.hmsrvr.lan"]
     
-    # Set preferences
-    print("  → Setting preferences...")
-    prefs = {
-        "save_path": QBIT_CONFIG["save_path"],
-        "temp_path": QBIT_CONFIG["temp_path"],
-        "temp_path_enabled": QBIT_CONFIG["temp_path_enabled"],
-        "max_ratio": QBIT_CONFIG["max_ratio"],
-        "max_seeding_time": QBIT_CONFIG["max_seeding_time"],
-        "max_ratio_act": QBIT_CONFIG["max_ratio_act"],
-    }
-    
-    resp = session.post(f"{base_url}/app/setPreferences", data={
-        "json": json.dumps(prefs)
-    })
-    
-    if resp.status_code == 200:
-        print("  ✓ Preferences updated")
-    else:
-        print(f"  ✗ Failed to update preferences: {resp.status_code}")
-    
-    # Create categories
-    print("  → Creating categories...")
-    for name, path in QBIT_CATEGORIES.items():
-        resp = session.post(f"{base_url}/torrents/createCategory", data={
-            "category": name,
-            "savePath": path
-        })
+    try:
+        # Get current config
+        resp = requests.get(f"{base_url}?mode=get_config&apikey={sabnzbd_key}&output=json", timeout=10)
         if resp.status_code == 200:
-            print(f"    ✓ Category '{name}' -> {path}")
-        elif resp.status_code == 409:
-            print(f"    ○ Category '{name}' already exists")
+            config = resp.json().get("config", {})
+            current_whitelist = config.get("misc", {}).get("host_whitelist", [])
+            
+            # Add our hosts if not already present
+            updated = False
+            for h in whitelist_hosts:
+                if h not in current_whitelist:
+                    current_whitelist.append(h)
+                    updated = True
+            
+            if updated:
+                whitelist_str = ",".join(current_whitelist)
+                resp = requests.get(
+                    f"{base_url}?mode=set_config&section=misc&keyword=host_whitelist&value={whitelist_str}&apikey={sabnzbd_key}&output=json",
+                    timeout=10
+                )
+                if resp.status_code == 200:
+                    print(f"    ✓ Host whitelist updated: {whitelist_hosts}")
+                else:
+                    print(f"    ✗ Failed to update whitelist: {resp.status_code}")
+            else:
+                print("    ○ Host whitelist already configured")
         else:
-            print(f"    ✗ Failed to create '{name}': {resp.status_code}")
+            print(f"    ✗ Could not get SABnzbd config: {resp.status_code}")
+    except requests.exceptions.RequestException as e:
+        print(f"    ✗ SABnzbd not reachable: {e}")
+    
+    # Print category setup instructions (manual step for now)
+    print("  ℹ Set up categories in Config → Categories:")
+    for name, path in SABNZBD_CATEGORIES.items():
+        print(f"      - {name}: {path}")
     
     return True
 
@@ -158,7 +158,7 @@ def configure_qbittorrent(host):
 # Sonarr Configuration
 # ============================================================================
 
-def configure_sonarr(host, api_key):
+def configure_sonarr(host, api_key, sabnzbd_key):
     """Configure Sonarr root folder and download client"""
     base_url = f"http://{host}:{PORTS['sonarr']}/api/v3"
     
@@ -177,41 +177,45 @@ def configure_sonarr(host, api_key):
             if resp:
                 print("    ✓ Root folder added: /data/media/tv")
     
-    # Add download client
+    # Add download client (SABnzbd for Usenet)
     print("  → Adding download client...")
     clients = api_request("GET", f"{base_url}/downloadclient", api_key)
     if clients:
         names = [c["name"] for c in clients.json()]
-        if "qBittorrent" in names:
-            print("    ○ qBittorrent client already exists")
+        if "SABnzbd" in names:
+            print("    ○ SABnzbd client already exists")
         else:
-            client_config = {
-                "enable": True,
-                "protocol": "torrent",
-                "priority": 1,
-                "name": "qBittorrent",
-                "fields": [
-                    {"name": "host", "value": "qbittorrent"},
-                    {"name": "port", "value": 8080},
-                    {"name": "useSsl", "value": False},
-                    {"name": "username", "value": "admin"},
-                    {"name": "password", "value": "adminadmin"},
-                    {"name": "tvCategory", "value": "tv"},
-                    {"name": "recentTvPriority", "value": 0},
-                    {"name": "olderTvPriority", "value": 0},
-                    {"name": "initialState", "value": 0},
-                    {"name": "sequentialOrder", "value": False},
-                    {"name": "firstAndLast", "value": False},
-                ],
-                "implementationName": "qBittorrent",
-                "implementation": "QBittorrent",
-                "configContract": "QBittorrentSettings",
-                "tags": []
-            }
-            resp = api_request("POST", f"{base_url}/downloadclient", api_key, 
-                             json=client_config)
-            if resp:
-                print("    ✓ qBittorrent client added")
+            if not sabnzbd_key:
+                print("    ⚠ No SABNZBD_API_KEY in .env - add manually")
+            else:
+                client_config = {
+                    "enable": True,
+                    "protocol": "usenet",
+                    "priority": 1,
+                    "removeCompletedDownloads": True,
+                    "removeFailedDownloads": True,
+                    "name": "SABnzbd",
+                    "fields": [
+                        {"name": "host", "value": "sabnzbd"},
+                        {"name": "port", "value": 8080},
+                        {"name": "useSsl", "value": False},
+                        {"name": "urlBase"},
+                        {"name": "apiKey", "value": sabnzbd_key},
+                        {"name": "username", "value": ""},
+                        {"name": "password", "value": ""},
+                        {"name": "tvCategory", "value": "tv"},
+                        {"name": "recentTvPriority", "value": -100},
+                        {"name": "olderTvPriority", "value": -100},
+                    ],
+                    "implementationName": "SABnzbd",
+                    "implementation": "Sabnzbd",
+                    "configContract": "SabnzbdSettings",
+                    "tags": []
+                }
+                resp = api_request("POST", f"{base_url}/downloadclient", api_key, 
+                                 json=client_config)
+                if resp:
+                    print("    ✓ SABnzbd client added")
     
     return True
 
@@ -220,7 +224,7 @@ def configure_sonarr(host, api_key):
 # Radarr Configuration
 # ============================================================================
 
-def configure_radarr(host, api_key):
+def configure_radarr(host, api_key, sabnzbd_key):
     """Configure Radarr root folder and download client"""
     base_url = f"http://{host}:{PORTS['radarr']}/api/v3"
     
@@ -239,41 +243,45 @@ def configure_radarr(host, api_key):
             if resp:
                 print("    ✓ Root folder added: /data/media/movies")
     
-    # Add download client
+    # Add download client (SABnzbd for Usenet)
     print("  → Adding download client...")
     clients = api_request("GET", f"{base_url}/downloadclient", api_key)
     if clients:
         names = [c["name"] for c in clients.json()]
-        if "qBittorrent" in names:
-            print("    ○ qBittorrent client already exists")
+        if "SABnzbd" in names:
+            print("    ○ SABnzbd client already exists")
         else:
-            client_config = {
-                "enable": True,
-                "protocol": "torrent",
-                "priority": 1,
-                "name": "qBittorrent",
-                "fields": [
-                    {"name": "host", "value": "qbittorrent"},
-                    {"name": "port", "value": 8080},
-                    {"name": "useSsl", "value": False},
-                    {"name": "username", "value": "admin"},
-                    {"name": "password", "value": "adminadmin"},
-                    {"name": "movieCategory", "value": "movies"},
-                    {"name": "recentMoviePriority", "value": 0},
-                    {"name": "olderMoviePriority", "value": 0},
-                    {"name": "initialState", "value": 0},
-                    {"name": "sequentialOrder", "value": False},
-                    {"name": "firstAndLast", "value": False},
-                ],
-                "implementationName": "qBittorrent",
-                "implementation": "QBittorrent",
-                "configContract": "QBittorrentSettings",
-                "tags": []
-            }
-            resp = api_request("POST", f"{base_url}/downloadclient", api_key, 
-                             json=client_config)
-            if resp:
-                print("    ✓ qBittorrent client added")
+            if not sabnzbd_key:
+                print("    ⚠ No SABNZBD_API_KEY in .env - add manually")
+            else:
+                client_config = {
+                    "enable": True,
+                    "protocol": "usenet",
+                    "priority": 1,
+                    "removeCompletedDownloads": True,
+                    "removeFailedDownloads": True,
+                    "name": "SABnzbd",
+                    "fields": [
+                        {"name": "host", "value": "sabnzbd"},
+                        {"name": "port", "value": 8080},
+                        {"name": "useSsl", "value": False},
+                        {"name": "urlBase"},
+                        {"name": "apiKey", "value": sabnzbd_key},
+                        {"name": "username", "value": ""},
+                        {"name": "password", "value": ""},
+                        {"name": "movieCategory", "value": "movies"},
+                        {"name": "recentMoviePriority", "value": -100},
+                        {"name": "olderMoviePriority", "value": -100},
+                    ],
+                    "implementationName": "SABnzbd",
+                    "implementation": "Sabnzbd",
+                    "configContract": "SabnzbdSettings",
+                    "tags": []
+                }
+                resp = api_request("POST", f"{base_url}/downloadclient", api_key, 
+                                 json=client_config)
+                if resp:
+                    print("    ✓ SABnzbd client added")
     
     return True
 
@@ -364,19 +372,20 @@ def main():
     sonarr_key = env.get("SONARR_API_KEY", "")
     radarr_key = env.get("RADARR_API_KEY", "")
     prowlarr_key = env.get("PROWLARR_API_KEY", "")
+    sabnzbd_key = env.get("SABNZBD_API_KEY", "")
     
-    # Configure qBittorrent (no API key needed, uses session auth)
-    configure_qbittorrent(args.host)
+    # Configure SABnzbd (host whitelist and instructions)
+    configure_sabnzbd(args.host, sabnzbd_key)
     
     # Configure Sonarr
     if sonarr_key and not sonarr_key.startswith("your_"):
-        configure_sonarr(args.host, sonarr_key)
+        configure_sonarr(args.host, sonarr_key, sabnzbd_key)
     else:
         print("\n📺 Skipping Sonarr (no API key in .env)")
     
     # Configure Radarr
     if radarr_key and not radarr_key.startswith("your_"):
-        configure_radarr(args.host, radarr_key)
+        configure_radarr(args.host, radarr_key, sabnzbd_key)
     else:
         print("\n🎬 Skipping Radarr (no API key in .env)")
     
@@ -393,8 +402,8 @@ def main():
     print("                    Done!")
     print("=" * 60)
     print("\nNext steps:")
-    print("  1. Change qBittorrent default password")
-    print("  2. Add indexers in Prowlarr")
+    print("  1. Complete SABnzbd wizard and add API key to Sonarr/Radarr")
+    print("  2. Add Usenet indexers in Prowlarr")
     print("  3. Configure quality profiles in Sonarr/Radarr")
     print("  4. Connect Plex to Overseerr")
 
