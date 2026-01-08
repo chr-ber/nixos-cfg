@@ -19,6 +19,30 @@
       ../../modules/home-manager.nix
     ];
 
+  system.stateVersion = "25.11";
+
+  # --- NIX SETTINGS ---
+  nix.settings = {
+    experimental-features = [ 
+      "nix-command"
+      "flakes"
+    ];
+    substituters = [
+      "https://cache.nixos.org/"
+      "https://nix-community.cachix.org"
+      "https://hyprland.cachix.org"
+    ];
+    trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+    ];
+    trusted-users = [ 
+      "root"
+      usr.name
+    ];
+  };
+
   custom.docker.enable = true;
 
   boot.loader.systemd-boot.enable = true;
@@ -44,26 +68,11 @@
 
   nixpkgs.config.allowUnfree = true;
 
-  nix.settings = {
-    experimental-features = [ "nix-command" "flakes" ];
-    substituters = [
-      "https://cache.nixos.org/"
-      "https://nix-community.cachix.org"
-      "https://hyprland.cachix.org"
-    ];
-    trusted-public-keys = [
-      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-      "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-    ];
-    trusted-users = [ "root" usr.name ];
-  };
+
 
   # Run unpatched binaries (useful for AppImages, VS Code remote, etc.)
   programs.nix-ld.enable = true;
   services.envfs.enable = true;
-
-  system.stateVersion = "25.11";
 
   hardware.cpu.amd.updateMicrocode = true;
   hardware.enableAllFirmware = true;  
@@ -102,9 +111,36 @@
   # ==========================================
   # network
   # ==========================================
-  networking.hostName = "wrkstn";
-  networking.networkmanager.enable = true;
+  networking = {
+    hostName = "wrkstn";
+    search = [ "lan" ];
 
+    nameservers = [ 
+      "192.168.0.199" 
+      "1.1.1.1"
+    ];
+
+    defaultGateway = "192.168.0.1";
+
+    interfaces.enp14s0 = {
+      useDHCP = false;
+      ipv4.addresses = [{
+        address = "192.168.0.62";
+        prefixLength = 24;
+      }];
+    };
+
+    networkmanager = {
+      enable = true;
+      dns = "default";
+
+      insertNameservers = [ 
+        "192.168.0.199"
+        "1.1.1.1"
+      ];
+    };
+  };
+  
   # ==========================================
   # audio and bluetooth
   # ==========================================
