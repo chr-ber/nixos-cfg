@@ -13,7 +13,7 @@
     ../../modules/zoxide.nix
     ../../modules/kitty.nix
     ../../modules/atuin.nix
-    ../../modules/starship.nix
+    ../../modules/starship
     ../../modules/fish.nix
     ../../modules/hypr/default.nix
     ../../modules/spotifyd/home.nix
