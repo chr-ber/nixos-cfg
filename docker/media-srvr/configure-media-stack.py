@@ -1,0 +1,403 @@
+#!/usr/bin/env python3
+"""
+Media Stack Configuration Script
+
+Configures qBittorrent, Sonarr, Radarr, and Prowlarr via their APIs.
+Run this after the stack is up and you've set API keys in .env
+
+Usage:
+    python3 configure-media-stack.py [--host HOST]
+"""
+
+import os
+import sys
+import json
+import argparse
+from pathlib import Path
+
+try:
+    import requests
+except ImportError:
+    print("Error: 'requests' library not found. Install with: pip install requests")
+    sys.exit(1)
+
+
+# ============================================================================
+# Configuration
+# ============================================================================
+
+# Service ports (external ports from docker-compose)
+PORTS = {
+    "prowlarr": 10101,
+    "sonarr": 10102,
+    "radarr": 10103,
+    "bazarr": 10104,
+    "overseerr": 10105,
+    "qbittorrent": 10106,
+}
+
+# qBittorrent settings
+QBIT_CONFIG = {
+    "save_path": "/data/torrents/mixed",
+    "temp_path": "/data/torrents/incomplete",
+    "temp_path_enabled": True,
+    "max_ratio": 2.0,
+    "max_seeding_time": 1440,  # 24 hours in minutes
+    "max_ratio_act": 1,  # 0=pause, 1=remove
+}
+
+QBIT_CATEGORIES = {
+    "movies": "/data/torrents/movies",
+    "tv": "/data/torrents/tv",
+}
+
+
+# ============================================================================
+# Helper Functions
+# ============================================================================
+
+def load_env():
+    """Load API keys from .env file"""
+    env_path = Path(__file__).parent / ".env"
+    env = {}
+    
+    if env_path.exists():
+        with open(env_path) as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    key, value = line.split("=", 1)
+                    env[key.strip()] = value.strip()
+    
+    # Also check environment variables
+    for key in ["SONARR_API_KEY", "RADARR_API_KEY", "PROWLARR_API_KEY"]:
+        if key in os.environ:
+            env[key] = os.environ[key]
+    
+    return env
+
+
+def api_request(method, url, api_key=None, **kwargs):
+    """Make an API request with error handling"""
+    headers = kwargs.pop("headers", {})
+    if api_key:
+        headers["X-Api-Key"] = api_key
+    
+    try:
+        resp = requests.request(method, url, headers=headers, timeout=30, **kwargs)
+        resp.raise_for_status()
+        return resp
+    except requests.exceptions.RequestException as e:
+        print(f"  ✗ Request failed: {e}")
+        return None
+
+
+# ============================================================================
+# qBittorrent Configuration
+# ============================================================================
+
+def configure_qbittorrent(host):
+    """Configure qBittorrent settings and categories"""
+    base_url = f"http://{host}:{PORTS['qbittorrent']}/api/v2"
+    session = requests.Session()
+    
+    print("\n📦 Configuring qBittorrent...")
+    
+    # Login (default credentials)
+    print("  → Logging in...")
+    resp = session.post(f"{base_url}/auth/login", data={
+        "username": "admin",
+        "password": "adminadmin"
+    })
+    
+    if resp.text != "Ok.":
+        print("  ✗ Login failed. Have you changed the default password?")
+        print("    Default: admin / adminadmin")
+        return False
+    
+    print("  ✓ Logged in successfully")
+    
+    # Set preferences
+    print("  → Setting preferences...")
+    prefs = {
+        "save_path": QBIT_CONFIG["save_path"],
+        "temp_path": QBIT_CONFIG["temp_path"],
+        "temp_path_enabled": QBIT_CONFIG["temp_path_enabled"],
+        "max_ratio": QBIT_CONFIG["max_ratio"],
+        "max_seeding_time": QBIT_CONFIG["max_seeding_time"],
+        "max_ratio_act": QBIT_CONFIG["max_ratio_act"],
+    }
+    
+    resp = session.post(f"{base_url}/app/setPreferences", data={
+        "json": json.dumps(prefs)
+    })
+    
+    if resp.status_code == 200:
+        print("  ✓ Preferences updated")
+    else:
+        print(f"  ✗ Failed to update preferences: {resp.status_code}")
+    
+    # Create categories
+    print("  → Creating categories...")
+    for name, path in QBIT_CATEGORIES.items():
+        resp = session.post(f"{base_url}/torrents/createCategory", data={
+            "category": name,
+            "savePath": path
+        })
+        if resp.status_code == 200:
+            print(f"    ✓ Category '{name}' -> {path}")
+        elif resp.status_code == 409:
+            print(f"    ○ Category '{name}' already exists")
+        else:
+            print(f"    ✗ Failed to create '{name}': {resp.status_code}")
+    
+    return True
+
+
+# ============================================================================
+# Sonarr Configuration
+# ============================================================================
+
+def configure_sonarr(host, api_key):
+    """Configure Sonarr root folder and download client"""
+    base_url = f"http://{host}:{PORTS['sonarr']}/api/v3"
+    
+    print("\n📺 Configuring Sonarr...")
+    
+    # Add root folder
+    print("  → Adding root folder...")
+    existing = api_request("GET", f"{base_url}/rootfolder", api_key)
+    if existing:
+        paths = [rf["path"] for rf in existing.json()]
+        if "/data/media/tv" in paths:
+            print("    ○ Root folder already exists")
+        else:
+            resp = api_request("POST", f"{base_url}/rootfolder", api_key, 
+                             json={"path": "/data/media/tv"})
+            if resp:
+                print("    ✓ Root folder added: /data/media/tv")
+    
+    # Add download client
+    print("  → Adding download client...")
+    clients = api_request("GET", f"{base_url}/downloadclient", api_key)
+    if clients:
+        names = [c["name"] for c in clients.json()]
+        if "qBittorrent" in names:
+            print("    ○ qBittorrent client already exists")
+        else:
+            client_config = {
+                "enable": True,
+                "protocol": "torrent",
+                "priority": 1,
+                "name": "qBittorrent",
+                "fields": [
+                    {"name": "host", "value": "qbittorrent"},
+                    {"name": "port", "value": 8080},
+                    {"name": "useSsl", "value": False},
+                    {"name": "username", "value": "admin"},
+                    {"name": "password", "value": "adminadmin"},
+                    {"name": "tvCategory", "value": "tv"},
+                    {"name": "recentTvPriority", "value": 0},
+                    {"name": "olderTvPriority", "value": 0},
+                    {"name": "initialState", "value": 0},
+                    {"name": "sequentialOrder", "value": False},
+                    {"name": "firstAndLast", "value": False},
+                ],
+                "implementationName": "qBittorrent",
+                "implementation": "QBittorrent",
+                "configContract": "QBittorrentSettings",
+                "tags": []
+            }
+            resp = api_request("POST", f"{base_url}/downloadclient", api_key, 
+                             json=client_config)
+            if resp:
+                print("    ✓ qBittorrent client added")
+    
+    return True
+
+
+# ============================================================================
+# Radarr Configuration
+# ============================================================================
+
+def configure_radarr(host, api_key):
+    """Configure Radarr root folder and download client"""
+    base_url = f"http://{host}:{PORTS['radarr']}/api/v3"
+    
+    print("\n🎬 Configuring Radarr...")
+    
+    # Add root folder
+    print("  → Adding root folder...")
+    existing = api_request("GET", f"{base_url}/rootfolder", api_key)
+    if existing:
+        paths = [rf["path"] for rf in existing.json()]
+        if "/data/media/movies" in paths:
+            print("    ○ Root folder already exists")
+        else:
+            resp = api_request("POST", f"{base_url}/rootfolder", api_key, 
+                             json={"path": "/data/media/movies"})
+            if resp:
+                print("    ✓ Root folder added: /data/media/movies")
+    
+    # Add download client
+    print("  → Adding download client...")
+    clients = api_request("GET", f"{base_url}/downloadclient", api_key)
+    if clients:
+        names = [c["name"] for c in clients.json()]
+        if "qBittorrent" in names:
+            print("    ○ qBittorrent client already exists")
+        else:
+            client_config = {
+                "enable": True,
+                "protocol": "torrent",
+                "priority": 1,
+                "name": "qBittorrent",
+                "fields": [
+                    {"name": "host", "value": "qbittorrent"},
+                    {"name": "port", "value": 8080},
+                    {"name": "useSsl", "value": False},
+                    {"name": "username", "value": "admin"},
+                    {"name": "password", "value": "adminadmin"},
+                    {"name": "movieCategory", "value": "movies"},
+                    {"name": "recentMoviePriority", "value": 0},
+                    {"name": "olderMoviePriority", "value": 0},
+                    {"name": "initialState", "value": 0},
+                    {"name": "sequentialOrder", "value": False},
+                    {"name": "firstAndLast", "value": False},
+                ],
+                "implementationName": "qBittorrent",
+                "implementation": "QBittorrent",
+                "configContract": "QBittorrentSettings",
+                "tags": []
+            }
+            resp = api_request("POST", f"{base_url}/downloadclient", api_key, 
+                             json=client_config)
+            if resp:
+                print("    ✓ qBittorrent client added")
+    
+    return True
+
+
+# ============================================================================
+# Prowlarr Configuration
+# ============================================================================
+
+def configure_prowlarr(host, api_key, sonarr_key, radarr_key):
+    """Configure Prowlarr to sync with Sonarr and Radarr"""
+    base_url = f"http://{host}:{PORTS['prowlarr']}/api/v1"
+    
+    print("\n🔍 Configuring Prowlarr...")
+    
+    # Get existing applications
+    apps = api_request("GET", f"{base_url}/applications", api_key)
+    if not apps:
+        return False
+    
+    existing_names = [a["name"] for a in apps.json()]
+    
+    # Add Sonarr
+    print("  → Adding Sonarr application...")
+    if "Sonarr" in existing_names:
+        print("    ○ Sonarr already configured")
+    else:
+        sonarr_config = {
+            "name": "Sonarr",
+            "syncLevel": "fullSync",
+            "fields": [
+                {"name": "prowlarrUrl", "value": f"http://prowlarr:9696"},
+                {"name": "baseUrl", "value": "http://sonarr:8989"},
+                {"name": "apiKey", "value": sonarr_key},
+                {"name": "syncCategories", "value": [5000, 5010, 5020, 5030, 5040, 5045, 5050]},
+            ],
+            "implementationName": "Sonarr",
+            "implementation": "Sonarr",
+            "configContract": "SonarrSettings",
+            "tags": []
+        }
+        resp = api_request("POST", f"{base_url}/applications", api_key, json=sonarr_config)
+        if resp:
+            print("    ✓ Sonarr application added")
+    
+    # Add Radarr
+    print("  → Adding Radarr application...")
+    if "Radarr" in existing_names:
+        print("    ○ Radarr already configured")
+    else:
+        radarr_config = {
+            "name": "Radarr",
+            "syncLevel": "fullSync",
+            "fields": [
+                {"name": "prowlarrUrl", "value": f"http://prowlarr:9696"},
+                {"name": "baseUrl", "value": "http://radarr:7878"},
+                {"name": "apiKey", "value": radarr_key},
+                {"name": "syncCategories", "value": [2000, 2010, 2020, 2030, 2040, 2045, 2050, 2060]},
+            ],
+            "implementationName": "Radarr",
+            "implementation": "Radarr",
+            "configContract": "RadarrSettings",
+            "tags": []
+        }
+        resp = api_request("POST", f"{base_url}/applications", api_key, json=radarr_config)
+        if resp:
+            print("    ✓ Radarr application added")
+    
+    return True
+
+
+# ============================================================================
+# Main
+# ============================================================================
+
+def main():
+    parser = argparse.ArgumentParser(description="Configure media stack services")
+    parser.add_argument("--host", default="localhost", 
+                       help="Host address (default: localhost)")
+    args = parser.parse_args()
+    
+    print("=" * 60)
+    print("      Media Stack Configuration Script")
+    print("=" * 60)
+    
+    # Load API keys
+    env = load_env()
+    
+    sonarr_key = env.get("SONARR_API_KEY", "")
+    radarr_key = env.get("RADARR_API_KEY", "")
+    prowlarr_key = env.get("PROWLARR_API_KEY", "")
+    
+    # Configure qBittorrent (no API key needed, uses session auth)
+    configure_qbittorrent(args.host)
+    
+    # Configure Sonarr
+    if sonarr_key and not sonarr_key.startswith("your_"):
+        configure_sonarr(args.host, sonarr_key)
+    else:
+        print("\n📺 Skipping Sonarr (no API key in .env)")
+    
+    # Configure Radarr
+    if radarr_key and not radarr_key.startswith("your_"):
+        configure_radarr(args.host, radarr_key)
+    else:
+        print("\n🎬 Skipping Radarr (no API key in .env)")
+    
+    # Configure Prowlarr
+    if prowlarr_key and not prowlarr_key.startswith("your_"):
+        if sonarr_key and radarr_key:
+            configure_prowlarr(args.host, prowlarr_key, sonarr_key, radarr_key)
+        else:
+            print("\n🔍 Skipping Prowlarr (need all API keys)")
+    else:
+        print("\n🔍 Skipping Prowlarr (no API key in .env)")
+    
+    print("\n" + "=" * 60)
+    print("                    Done!")
+    print("=" * 60)
+    print("\nNext steps:")
+    print("  1. Change qBittorrent default password")
+    print("  2. Add indexers in Prowlarr")
+    print("  3. Configure quality profiles in Sonarr/Radarr")
+    print("  4. Connect Plex to Overseerr")
+
+
+if __name__ == "__main__":
+    main()
