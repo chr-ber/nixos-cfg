@@ -5,8 +5,8 @@ services:
     ports:
       - 53:53/tcp
       - 53:53/udp
-      - 10107:3000
-      - 10108:80
+      - 10007:3000
+      - 10008:80
     volumes:
       - /data/docker/adguard/work:/opt/adguardhome/work
       - /data/docker/adguard/conf:/opt/adguardhome/conf
