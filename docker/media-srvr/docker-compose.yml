@@ -58,7 +58,7 @@ services:
       - 10104:6767
     restart: unless-stopped
 
-  # --- overseer ---
+  # manage movies & series -> plex stack
   overseerr:
     image: sctx/overseerr:latest
     container_name: overseerr
@@ -71,6 +71,27 @@ services:
     ports:
       - 10105:5055
     restart: unless-stopped
+
+  # manage movies & series -> jelly stack
+  jellyseerr:
+    image: ghcr.io/fallenbagel/jellyseerr:latest
+    init: true
+    container_name: jellyseerr
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=Europe/Vienna
+      - PORT=5055
+    ports:
+      - 10107:5055
+    volumes:
+      - /data/docker/jellyseerr:/app/config
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:5055/api/v1/status || exit 1
+      start_period: 20s
+      timeout: 3s
+      interval: 15s
+      retries: 3
+    restart: unless-stopped    
 
   # Usenet download client
   sabnzbd:
@@ -87,21 +108,11 @@ services:
       - 10106:8080
     restart: unless-stopped
 
-  # --- PLAYER ---
-  plex:
+  # --- PLAYER --- plex stack
+  plex: 
     image: lscr.io/linuxserver/plex:latest
     container_name: plex
-    # Removed network_mode: host to allow container-to-container networking
-    ports:
-      - 32400:32400
-      - 1900:1900/udp   # DLNA discovery
-      - 5353:5353/udp   # Bonjour/Avahi
-      - 8324:8324       # Plex Companion
-      - 32410:32410/udp # GDM network discovery
-      - 32412:32412/udp # GDM network discovery
-      - 32413:32413/udp # GDM network discovery
-      - 32414:32414/udp # GDM network discovery
-      - 32469:32469     # DLNA server
+    network_mode: host
     environment:
       - PUID=1000
       - PGID=100
@@ -113,6 +124,32 @@ services:
     devices:
       - /dev/dri:/dev/dri # Passes the i5-12400 iGPU for transcoding
     restart: unless-stopped
+
+  # --- PLAYER --- jelly stack
+  jellyfin:
+    image: jellyfin/jellyfin
+    container_name: jellyfin
+    user: 1000:100
+    ports:
+      - 10108:8096/tcp
+      - 10109:7359/udp
+    volumes:
+      - /data/docker/jellyfin/config:/config
+      - /data/docker/jellyfin/cache:/cache
+      - type: bind
+        source: /data/media
+        target: /media
+      - type: bind
+        source: /run/current-system/sw/share/X11/fonts
+        target: /usr/local/share/fonts/custom
+        read_only: true
+    restart: 'unless-stopped'
+    devices:
+      - /dev/dri:/dev/dri  # Intel i5-12400 iGPU for hardware transcoding
+    environment:
+      - JELLYFIN_PublishedServerUrl=http://jellyfin.hmsrvr.lan
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
 
   # --- GATEWAY ---
   nginx:
@@ -132,4 +169,7 @@ services:
       - bazarr
       - overseerr
       - sabnzbd
+      - plex
+      - jellyfin
+      - jellyseerr
     restart: unless-stopped
