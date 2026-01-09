@@ -7,7 +7,7 @@ let
   # Available themes in ./themes/
 
   # Change this to switch themes:
-  activeTheme = "gruvbox-rainbow";
+  activeTheme = "cyberpunk-cstm";
   
   themesDir = ./themes;
   themeFile = themesDir + "/${activeTheme}.toml";
